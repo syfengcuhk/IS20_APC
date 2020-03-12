@@ -57,7 +57,9 @@ One of the research problems tackled by ZeroSpeech is to learn frame-level featu
 %  \cite{Ondel2019Bayesian}. 
 %  The present study addresses   unsupervised subword modeling.
 
-There were many successful attempts to unsupervised subword modeling in previous studies \cite{chen2015parallel,heck2017feature,chorowski2019unsupervised,shibata2017composite,feng2019_TASLP,riviere2020unsupervised}. In between, one research direction is to explore effective unsupervised learning techniques towards target untranscribed speech data \cite{chen2015parallel,heck2017feature,chorowski2019unsupervised}. Chen et al. \cite{chen2015parallel} proposed to adopt the Dirichlet process Gaussian mixture model (DPGMM) to cluster speech frames and generate posteriorgram as the learned  representation. This approach achieved the best performance in ZeroSpeech 2015 \cite{versteegh2015zero}. Heck et al. \cite{heck2017feature} extended \cite{chen2015parallel} by replacing spectral features with speaker adapted features as inputs to DPGMM and performed the best in ZeroSpeech 2017 \cite{heck2017feature}. 
+There were many successful attempts to unsupervised subword modeling in previous studies \cite{chen2015parallel,heck2017feature,chorowski2019unsupervised,shibata2017composite,feng2019_TASLP,riviere2020unsupervised,Feng2019combining}. In between, one research direction is to explore effective unsupervised learning techniques 
+% towards target untranscribed speech data 
+\cite{chen2015parallel,heck2017feature,chorowski2019unsupervised}. Chen et al. \cite{chen2015parallel} proposed to adopt the Dirichlet process Gaussian mixture model (DPGMM) to cluster speech frames and generate posteriorgram as the learned  representation. This approach achieved the best performance in ZeroSpeech 2015 \cite{versteegh2015zero}. Heck et al. \cite{heck2017feature} extended \cite{chen2015parallel} by replacing spectral features with speaker adapted features as inputs to DPGMM and performed the best in ZeroSpeech 2017 \cite{heck2017feature}. 
 % Vector quantized variational autoencoder (VQ-VAE) \cite{chorowski2019unsupervised} and factorized hierarchical VAE (FHVAE) \cite{Feng2019improving} were applied 
 In  \cite{chorowski2019unsupervised}, the vector quantized variational autoencoder (VQ-VAE) \cite{oord2017neural} was applied to learn desired feature representation at its latent space. Factorized hierarchical VAE (FHVAE) was applied in \cite{Feng2019improving}. 
 The work in \cite{riviere2020unsupervised} adopted contrastive predictive coding (CPC) \cite{oord2018cpc}.
@@ -82,7 +84,7 @@ pretraining could increase the accessibility of subword information to our back-
 The effectiveness of APC in unsupervised subword modeling has not been studied before.
 % Motivated by this, we, for the first time, propose to apply APC in unsupervised subword modeling.
 
-At the second stage of our approaches, APC pretrained speech features and cross-lingual phone labels, obtained based on an OOD ASR system,  are used to train a DNN-BNF model. The BNFs are learned  as subword-discriminative features. The efficacy of cross-lingual phone-aware  modeling was shown in \cite{feng2018exploiting,feng2019_TASLP}. In the present study, this approach is applied in combination with APC pretrained features to achieve improved performance.
+At the second stage of our approaches, APC pretrained speech features and cross-lingual phone labels, obtained based on an OOD ASR system,  are used to train a phone-aware DNN-BNF model. The BNFs are learned  as subword-discriminative features. The efficacy of cross-lingual phone-aware  modeling was shown in \cite{feng2018exploiting,feng2019_TASLP}. In the present study, this approach is applied in combination with APC pretrained features to achieve improved performance.
 % , where cross-lingual labels are obtained by applying an OOD ASR system.
 % an OOD ASR system is applied to assign a phone label for each target untranscribed speech frame.
 % of target zero-resource speech. 
@@ -96,7 +98,7 @@ At the second stage of our approaches, APC pretrained speech features and cross-
 %   1.1. DNN-BNF with DPGMM labels and cross-lingual phone labels
 % for major languages, such as English and Mandarin. One major reason is that 
 
-The present work systematically studies the  sensitivity of the proposed approaches' effectiveness towards    untranscribed training data amount.  We argue that this is an important issue but with little concern in past works. 
+The present work systematically studies the  sensitivity of the proposed approaches' effectiveness towards    untranscribed training data amount.  We argue that this is an important issue but with little concern in the past. 
 It measures to which extent the proposed approaches are reliable to limited data amount. For a real-world low-resource language for which transcribed data is absent, 
 even unlabeled speech are considered costly to collect. Approaches performing well with limited training data  would be appealing. 
 % In a practical sense, 
@@ -119,44 +121,67 @@ The general framework of our proposed approaches is illustrated in Figure \ref{f
 \subsection{APC pretraining}
 APC is an unsupervised generative model proposed for feature representation learning \cite{Chung2019}. 
 % It was proposed by \cite{Chung2019} to learn frame-level feature representation which facilitates a wide range of downstream tasks. 
-The effectiveness of APC has been demonstrated in both ASR and SV tasks \cite{Chung2019}. It indicates that APC pretrained features preserve both phonetic (subword) and speaker information in original speech,  but are more accessible and separable to task-specific back-end models, comparing to spectral features and other feature learning methods. 
-For our concerned unsupervised subword modeling task, previously adopted feature learning methods such as FHVAE \cite{Feng2019improving} and adversarial training \cite{Higuchi2019} are designed to discard speaker variation. The present study applies APC to learn a representation that preserves information in original speech, but subword information is made more separable to other types of information. Such learned representation is expected to facilitate back-end subword-discriminative modeling.
+Its effectiveness has been demonstrated in both ASR and SV tasks \cite{Chung2019}. It indicates that APC pretraining preserves both phonetic (subword) and speaker information in original speech,  but are more  separable and are more accessible to task-specific back-end models, comparing to spectral features and other feature learning methods \cite{Chung2019}. 
+
+For our concerned unsupervised subword modeling task, previously adopted feature learning methods 
+% such as FHVAE \cite{Feng2019improving} and adversarial training \cite{Higuchi2019} 
+are usually designed to suppress speaker variation \cite{Feng2019improving,heck2017feature}. In contrast, the present study applies APC to learn a representation that keeps information in original speech, meanwhile subword information is made more separable to speaker information. The learned representation is expected to facilitate back-end subword-discriminative modeling, and is less risky of losing subword information.
 
 
 % both subword and speaker information and they are more separable, hence facilitates back-end modeling to learn subword-discriminative representation of speech.%,  %The present study adopts APC to learn a feature representation
 
-Let us consider a certain amount of unlabeled training data $\{\bm{x_1}, \bm{x_2}, \ldots, \bm{x_T}\}$, where $T$ is the total number of frames. At each time step $t$, the encoder of APC model $\textrm{Enc}$ reads as input
+Let us assume a certain amount of unlabeled training data $\{\bm{x_1}, \bm{x_2}, \ldots, \bm{x_T}\}$, where $T$ is the total number of frames. At each time step $t$, the encoder of APC model $\textrm{Enc}$ reads as input
 $\bm{x_t}$, 
 % $\bm{x_{1:t}}=\{\bm{x_1},\ldots,\bm{x_t}\}$ 
 and outputs $\bm{y_t}$ (same dimension as $\bm{x_t}$) based on all previous inputs $\bm{x_{1:t}}=\{\bm{x_1},\ldots,\bm{x_t}\}$,
 \begin{equation}
     \bm{y_t} = \textrm{Enc} (\bm{x_{1:t}}).
+    \label{eqt:enc}
 \end{equation}
 The goal of APC is to let $\bm{y_t}$ be as close to $\bm{x_{t+n}}$ as possible, where $n$ is a pre-defined constant positive integer. The loss function of APC model is defined as,
 \begin{equation}
     \textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{y_t} - \bm{x_{t+n}} \right|.
     \label{eqt:apc_loss}
 \end{equation}
-By minimizing the loss function in Equation (\ref{eqt:apc_loss}), the APC encoder can be trained. Intuitively, increasing $n$ encourages the APC encoder to capture more global structures in speech, while a small $n$ focuses more on local smoothness.
+By minimizing the loss function in Equation (\ref{eqt:apc_loss}), the APC encoder can be trained. Intuitively, increasing $n$ encourages the APC encoder to capture contextual dependencies in speech, 
+% more global structures in speech, 
+while a small $n$ focuses more on local smoothness.
  
-The encoder of APC is realized by the long short-term memory (LSTM) \cite{hochreiter1997long} RNN architecture. 
+The encoder of APC is realized by the long short-term memory (LSTM) \cite{hochreiter1997long} RNN architecture in this work. Let $L$ denote the number of LSTM layers in the encoder. Equation (\ref{eqt:enc}) is formulated as,
+\begin{align}
+    \bm{h_0} &= \bm{x_{1:t}},    \\
+    \bm{h_l} &= \textrm{LSTM}^l (\bm{h_{l-1}}), l\in \{1,2,\ldots, L\}, \\
+    \bm{y_t} &= \bm{W} \bm{h_L}.
+\end{align}
+Details of the LSTM layer structure can be seen in \cite{sak2014long}.
+
+After APC training, $\bm{h_L}$ is extracted as the  learned  representation, and is referred to as \textit{APC features} in this paper. In principle,  $\bm{h_l}$ of any layer $l$ could be used as the learned representation. Results in \cite{Chung2019} suggest that higher layer outputs are more suitable for phone classification, while lower layers more suitable for speaker classification.
+% Here $\bm{h_l}$ denotes the output of  
+
 % , APC pretrained features surpass spectral features 
 % which require 
 % phonetic and speaker information in APC features are both more accessible to their respective back-end models for ASR and SV tasks.
-(-) Architecture of Enc.\\
-(-) how to extract features from APC to back-end.
+% (-) Architecture of Enc.\\
+% (-) how to extract features from APC to back-end.
 % APC pretrained features  tend to retain as much information encoded in original speech representation as  possible. 
 % different types of information in APC features, such as phonetic and speaker information, are both more accessible to the back-end models corresponding to their respective tasks.
-\subsection{Cross-lingual phone-aware modeling}
+\subsection{Cross-lingual phone-aware DNN-BNF}
+% The back-end of our proposed approaches is t
+The DNN-BNF model  \cite{chen2017multilingual,feng2018exploiting} is adopted as the back-end of our proposed approaches. It is a DNN with a low-dimension intermediate layer. BNFs are known of providing compact yet subword-discriminative representation of speech \cite{grezl2009investigation}.  
+% Training of a subword-discriminative DNN-BNF model requires frame labels \cite{chen2017multilingual}. 
+Under the zero-resource scenario, frame alignments required for DNN-BNF modeling cannot be obtained due to the absence of transcriptions. This study leverages an OOD ASR system to decode target speech in a language-mismatched manner. Through decoding, each speech frame is assigned with triphone HMM state  label of the OOD language. These labels provide phonetic representation for the target speech from a cross-lingual perspective. 
+
+
 
 (-) OOD ASR decoding\\
 (-) DNN-BNF training with APC features and cross-lingual phone labels\\
-()
+(-) Effect of OOD language identity.
 % Authors should observe the following rules for page layout. A highly recommended way to meet these requirements is to use a given template (Microsoft Word?? or LaTeX) and check details against the corresponding example PDF file. Given templates, Microsoft Word\textregistered\ or \LaTeX, can be adapted/imported easily in other software such as LibreOffice, Apple Pages, Lua\LaTeX, and Xe\LaTeX, but please be careful to match the layout of the provided PDF example.
 
+\section{Experimental setup}
 
-
-\section{Discussion}
+\section{Results and discussion}
+% \section{Discussion}
 
 This is the discussion. This is the discussion. This is the discussion. Is there any discussion?
 
