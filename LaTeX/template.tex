@@ -38,7 +38,7 @@
 % , thanks to the successful application of deep neural networks (DNNs) in acoustic and language modeling. 
 % Acoustic modeling is a core component in building an ASR system. 
 % It is   considered a supervised learning problem.  
-Training DNN acoustic models (AMs) for a high-performance automatic speech recognition (ASR) system requires a huge amount of speech data paired with their corresponding transcriptions. 
+Training a DNN acoustic model (AM) for a high-performance automatic speech recognition (ASR) system requires a huge amount of speech data paired with their corresponding transcriptions. 
 %While this is considered not a problem for  languages such as English and Mandarin, 
 Many languages in the world have very limited or even no transcribed data \cite{dunbar2017zero}. 
 % In an extreme scenario where there are no transcribed data available for the concerned  language, 
@@ -138,7 +138,7 @@ and outputs $\bm{y_t}$ (same dimension as $\bm{x_t}$) based on all previous inpu
     \bm{y_t} = \textrm{Enc} (\bm{x_{1:t}}).
     \label{eqt:enc}
 \end{equation}
-The goal of APC is to let $\bm{y_t}$ be as close to $\bm{x_{t+n}}$ as possible, where $n$ is a pre-defined constant positive integer. The loss function of APC model is defined as,
+The goal of APC is to let $\bm{y_t}$ be as close to $\bm{x_{t+n}}$ as possible, where $n$ is a pre-defined constant positive integer. The loss function during APC model training is defined as,
 \begin{equation}
     \textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{y_t} - \bm{x_{t+n}} \right|.
     \label{eqt:apc_loss}
@@ -153,9 +153,9 @@ The encoder of APC is realized by the long short-term memory (LSTM) \cite{hochre
     \bm{h_l} &= \textrm{LSTM}^l (\bm{h_{l-1}}), l\in \{1,2,\ldots, L\}, \\
     \bm{y_t} &= \bm{W} \bm{h_L}.
 \end{align}
-Details of the LSTM layer structure can be seen in \cite{sak2014long}.
+Details of the  layer structure $\textrm{LSTM} (\cdot)$ can be seen in \cite{sak2014long}.
 
-After APC training, $\bm{h_L}$ is extracted as the  learned  representation, and is referred to as \textit{APC features} in this paper. In principle,  $\bm{h_l}$ of any layer $l$ could be used as the learned representation. Results in \cite{Chung2019} suggest that higher layer outputs are more suitable for phone classification, while lower layers more suitable for speaker classification.
+After APC training, the output of the top hidden layer $\bm{h_L}$ is extracted as the  learned  representation, and is referred to as \textit{APC features} in this paper. In principle,  $\bm{h_l}$ of any layer $l$ could be used as the learned representation. Results in \cite{Chung2019} suggest that outputs of higher layers  are more suitable for phone classification, while lower layer outputs are  more suitable for speaker classification.
 % Here $\bm{h_l}$ denotes the output of  
 
 % , APC pretrained features surpass spectral features 
@@ -167,19 +167,84 @@ After APC training, $\bm{h_L}$ is extracted as the  learned  representation, and
 % different types of information in APC features, such as phonetic and speaker information, are both more accessible to the back-end models corresponding to their respective tasks.
 \subsection{Cross-lingual phone-aware DNN-BNF}
 % The back-end of our proposed approaches is t
-The DNN-BNF model  \cite{chen2017multilingual,feng2018exploiting} is adopted as the back-end of our proposed approaches. It is a DNN with a low-dimension intermediate layer. BNFs are known of providing compact yet subword-discriminative representation of speech \cite{grezl2009investigation}.  
+The DNN-BNF model  \cite{chen2017multilingual,feng2018exploiting} is adopted as the back-end of our proposed approaches. It is a DNN with a low-dimension hidden (BN) layer in the middle. BNFs are known of providing compact yet subword-discriminative representation of speech \cite{grezl2009investigation}.  
 % Training of a subword-discriminative DNN-BNF model requires frame labels \cite{chen2017multilingual}. 
-Under the zero-resource scenario, frame alignments required for DNN-BNF modeling cannot be obtained due to the absence of transcriptions. This study leverages an OOD ASR system to decode target speech in a language-mismatched manner. Through decoding, each speech frame is assigned with triphone HMM state  label of the OOD language. These labels provide phonetic representation for the target speech from a cross-lingual perspective. 
+Under the zero-resource scenario, phonetic alignments of target speech required for DNN-BNF modeling cannot be obtained due to the absence of transcriptions. 
 
+This study leverages an OOD language-mismatched ASR system to generate cross-lingual phonetic alignments for in-domain speech.
+Specifically, the OOD ASR is used to decode  and find the best paths for every in-domain speech utterances, as was done in \cite{feng2019_TASLP}. Through decoding, each speech frame is assigned with a triphone HMM state modeled by the OOD ASR. These labels provide phonetic representation for the target speech from a cross-lingual perspective. Although languages vary greatly in pronunciation, speech sounds in different languages are believed to have much overlap at phoneme level.
+It is worth noting that decoding results depend on the relative weighting  of the ASR AM and language model (LM). In this study, the LM carries a very small weight, in order to ensure decoding results mainly reflect acoustic characteristics of target speech.
 
+After obtaining cross-lingual triphone HMM state labels, a DNN-BNF model is trained with target speech, using these labels as supervision.  
+The DNN-BNF is trained to optimize cross-lingual phone classification accuracy.
+The inputs to DNN-BNF are APC features. 
+After training, the DNN-BNF is used to extract BNFs for target speech as the subword-discriminative feature representation. 
+% XXX cross-lingual phone-aware manner.
 
-(-) OOD ASR decoding\\
-(-) DNN-BNF training with APC features and cross-lingual phone labels\\
-(-) Effect of OOD language identity.
+The choice of language identities of OOD ASR systems is flexible in principle. In the present study, a comparison is made by applying OOD ASR systems from different languages to generate cross-lingual labels, in order to study the influence of selecting OOD ASRs on final performance.
+% its influence towards the final performance.
+% our proposed approaches.
+
+% (-) OOD ASR decoding\\
+% (-) DNN-BNF training with APC features and cross-lingual phone labels\\
+% (-) Effect of OOD language identity.
 % Authors should observe the following rules for page layout. A highly recommended way to meet these requirements is to use a given template (Microsoft Word?? or LaTeX) and check details against the corresponding example PDF file. Given templates, Microsoft Word\textregistered\ or \LaTeX, can be adapted/imported easily in other software such as LibreOffice, Apple Pages, Lua\LaTeX, and Xe\LaTeX, but please be careful to match the layout of the provided PDF example.
 
 \section{Experimental setup}
 
+\subsection{Database and evaluation metric}
+Experiments in this study are carried out on two databases: Libri-light \cite{kahn2019librilight} and ZeroSpeech 2017 \cite{Dunbar2019}. Libri-light is a newly published   database to facilitate research on ASR under limited or zero resource scenarios. It is by far the largest public database to support evaluation on unsupervised subword modeling. The language in Libri-light is English. The \texttt{unlab-600} set from Libri-light is adopted as training data in most of our experiments. This set contains $36,229$ utterances by $489$ speakers, summing up to $526$ hours. In addition, we randomly select subsets of utterances in \texttt{unlab-600}  to form smaller-sized training data. There are four smaller-sized training sets constructed in this study, with the numbers of utterances ranging from $900$ to $3.6$K, $7.2$K and $14.4$K. Details of \texttt{unlab-600} and the training subsets are summarized in Table \ref{tab:libri_light_data}.
+\begin{table}[htbp]
+\renewcommand\arraystretch{0.90}
+\centering
+\caption{Libri-light training data and its subsets.}
+\resizebox{1 \linewidth}{!}{%
+\begin{tabular}{l|ccccc}      
+% \hline      
+% \toprule
+& Unlab-600 & Sub14.4K & Sub7.2K & Sub3.6K & Sub0.9K \\
+%  & \multicolumn{3}{c|}{ Training} & Test \\
+\midrule
+\# Utterances & $36,229$ & $14,400$ &$7,200$ &$3,600$ &$900$ \\
+\# Speakers & $489$ & $438$ & $393$ & $351$ & $244$ \\
+\# Hours &$526$& $209$ & $104$ & $52$ & $13$ \\
+%  & Duration  &\#speakers-R\tablefootnote{``speakers-R/-L'' denotes speakers with rich/limited speech data.} &\#speakers-L\footnotemark[1]  & Duration\\
+% \hline
+% \midrule
+
+% Training hours:  & $19.3$ & $81.5$ & $105.3$ \\
+% Test hours:& $0.6$ & $0.7$ & $5.9$ \\
+% Basic acoustic unit:  & Phone & Phone & Initial-Final \\
+% \#basic units (inc. sil):& $33$ & $87$ & $61$ \\
+% \#tied CD-HMM states:& $2462$ & $3431$ & $2386$ \\ 
+% Lexicon size:& $ $ & $ 133K$& $ $ \\
+% $\#$ Phonemes: &$43$& $46$&$ 29$& $44$& $38$\\
+% \hline
+% \bottomrule
+\end{tabular}%
+% \footnotetext{`speakers-R/-L' denotes speakers with rich/limited speech data}
+}
+\label{tab:libri_light_data}
+\end{table}
+
+The evaluation data in Libri-light consists of four sets, \texttt{dev-clean, dev-other, test-clean} and \texttt{test-other}. They are the same as that of Librispeech corpus \cite{panayotov2015librispeech}.
+
+
+ZeroSpeech 2017 database is also used in our experiments, but only for performance evaluation.  English test set is adopted. 
+% contains three languages, English, French and Mandarin. In our experiments, ZeroSpeech training data is not used, and 
+% Our systems are trained solely on Libri-light. ZeroSpeech evaluation data for English is used. 
+It is organized into subsets of differing utterance lengths (1s, 10s and 120s).
+% consists of three utterance length settings, $1$s
+% English 
+
+
+The evaluation metric is ABX subword discriminability.
+The ABX task is to decide whether $X$ belongs to $x$ or $y$ if $A$ belongs to $x$ and $B$ belongs to $y$, where $A$, $B$ and $X$ are three speech segments, $x$ and $y$ are two phonemes that differ in the central sound (e.g., \quotes{beg}-\quotes{bag}). 
+Each pair of $A$ and $B$ are generated by the same speaker. 
+ABX error rates for \textit{within-speaker} and \textit{across-speaker} are evaluated separately, depending on whether $X$ and $A(B)$ belong to the same speaker. 
+\subsection{APC setup}
+\subsection{OOD ASR systems}
+\subsection{DNN-BNF setup}
 \section{Results and discussion}
 % \section{Discussion}
 
