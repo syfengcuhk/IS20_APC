@@ -1,19 +1,23 @@
 \documentclass[a4paper]{article}
-
+\usepackage{url}
 \usepackage{INTERSPEECH2020}
 \usepackage{cite}
 \usepackage{tablefootnote}
 \usepackage{color}
+\usepackage{graphicx} 
+\usepackage{epstopdf, multirow}
+
+
 \usepackage{pifont}
 \usepackage{footnote}
 \makesavenoteenv{tabular}
-
+\newcommand{\quotes}[1]{``#1''}
 \usepackage{soul}
 \title{Unsupervised Subword Modeling Using Autoregressive Pretraining and Cross-Lingual Phone-Aware Modeling}
 \name{Siyuan Feng, Odette Scharenborg}
 %The maximum number of authors in the author list is twenty. If the number of contributing authors is more than twenty, they should be listed in a footnote or in acknowledgement section, as appropriate.
 \address{
-  Multimedia Computing Group, Delft University of Technology,  The Netherlands}% \\
+  Multimedia Computing Group, Delft University of Technology,  the Netherlands}% \\
  %$^2$Department of Electronic Engineering, The Chinese University of Hong Kong, Hong Kong}
 \email{\{S.Feng, O.E.Scharenborg\}@tudelft.nl}
 
@@ -30,7 +34,7 @@
 
 %   Index terms should be included as shown below.
 \end{abstract}
-\noindent\textbf{Index Terms}: speech recognition, human-computer interaction, computational paralinguistics
+\noindent\textbf{Index Terms}: unsupervised subword modeling, autoregressive predictive coding, {\color{cyan}TBD}
 
 \section{Introduction}
 
@@ -138,7 +142,7 @@ and outputs $\bm{y_t}$ (same dimension as $\bm{x_t}$) based on all previous inpu
     \bm{y_t} = \textrm{Enc} (\bm{x_{1:t}}).
     \label{eqt:enc}
 \end{equation}
-The goal of APC is to let $\bm{y_t}$ be as close to $\bm{x_{t+n}}$ as possible, where $n$ is a pre-defined constant positive integer. The loss function during APC model training is defined as,
+The goal of APC is to let $\bm{y_t}$ be as close to $\bm{x_{t+n}}$ as possible, where $n$ is a pre-defined constant positive integer, denoted as \textit{prediction steps}. In other words, an APC tries to predict a speech frame that is $n$ steps ahead of the current time. The loss function during APC model training is defined as,
 \begin{equation}
     \textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{y_t} - \bm{x_{t+n}} \right|.
     \label{eqt:apc_loss}
@@ -181,7 +185,7 @@ The inputs to DNN-BNF are APC features.
 After training, the DNN-BNF is used to extract BNFs for target speech as the subword-discriminative feature representation. 
 % XXX cross-lingual phone-aware manner.
 
-The choice of language identities of OOD ASR systems is flexible in principle. In the present study, a comparison is made by applying OOD ASR systems from different languages to generate cross-lingual labels, in order to study the influence of selecting OOD ASRs on final performance.
+The choice of language identities of OOD ASR systems is flexible in principle. In the present study, a comparison is made by applying OOD ASR systems for different languages to generate cross-lingual labels, in order to study the effect  of OOD  languages towards subword modeling performance.
 % its influence towards the final performance.
 % our proposed approaches.
 
@@ -193,7 +197,9 @@ The choice of language identities of OOD ASR systems is flexible in principle. I
 \section{Experimental setup}
 
 \subsection{Database and evaluation metric}
-Experiments in this study are carried out on two databases: Libri-light \cite{kahn2019librilight} and ZeroSpeech 2017 \cite{Dunbar2019}. Libri-light is a newly published   database to facilitate research on ASR under limited or zero resource scenarios. It is by far the largest public database to support evaluation on unsupervised subword modeling. The language in Libri-light is English. The \texttt{unlab-600} set from Libri-light is adopted as training data in most of our experiments. This set contains $36,229$ utterances by $489$ speakers, summing up to $526$ hours. In addition, we randomly select subsets of utterances in \texttt{unlab-600}  to form smaller-sized training data. There are four smaller-sized training sets constructed in this study, with the numbers of utterances ranging from $900$ to $3.6$K, $7.2$K and $14.4$K. Details of \texttt{unlab-600} and the training subsets are summarized in Table \ref{tab:libri_light_data}.
+Experiments in this study are carried out on two databases: Libri-light \cite{kahn2019librilight} and ZeroSpeech 2017 \cite{dunbar2017zero}. Libri-light is a newly published   database to facilitate research on ASR under limited or zero resource scenarios. It is by far the largest public database to support evaluation on unsupervised subword modeling. The language in Libri-light is English. The \texttt{unlab-600} set from Libri-light is adopted as training data in most of our experiments. This set contains 
+% $36,229$ utterances by $489$ speakers, summing up to
+in total $526$ hours of speech. In addition, we randomly select subsets of utterances in unlab-600   to form smaller-sized training sets. There are four smaller-sized training sets constructed in this study, with the numbers of utterances ranging from $900$ to $3.6$K, $7.2$K and $14.4$K. Details of  unlab-600  and the training subsets are summarized in Table \ref{tab:libri_light_data}.
 \begin{table}[htbp]
 \renewcommand\arraystretch{0.90}
 \centering
@@ -207,7 +213,7 @@ Experiments in this study are carried out on two databases: Libri-light \cite{ka
 \midrule
 \# Utterances & $36,229$ & $14,400$ &$7,200$ &$3,600$ &$900$ \\
 \# Speakers & $489$ & $438$ & $393$ & $351$ & $244$ \\
-\# Hours &$526$& $209$ & $104$ & $52$ & $13$ \\
+Hours &$526$& $209$ & $104$ & $52$ & $13$ \\
 %  & Duration  &\#speakers-R\tablefootnote{``speakers-R/-L'' denotes speakers with rich/limited speech data.} &\#speakers-L\footnotemark[1]  & Duration\\
 % \hline
 % \midrule
@@ -226,30 +232,93 @@ Experiments in this study are carried out on two databases: Libri-light \cite{ka
 }
 \label{tab:libri_light_data}
 \end{table}
+The evaluation data in Libri-light consists of four sets, \textit{dev-clean, dev-other, test-clean} and \textit{test-other}. 
+They are the same as that in Librispeech database \cite{panayotov2015librispeech}.
 
-The evaluation data in Libri-light consists of four sets, \texttt{dev-clean, dev-other, test-clean} and \texttt{test-other}. They are the same as that of Librispeech corpus \cite{panayotov2015librispeech}.
 
-
-ZeroSpeech 2017 database is also used in our experiments, but only for performance evaluation.  English test set is adopted. 
+ZeroSpeech 2017 database is also used in our experiments, but only for performance evaluation.  English test set is adopted, as our system is trained with English unlabeled data. 
 % contains three languages, English, French and Mandarin. In our experiments, ZeroSpeech training data is not used, and 
 % Our systems are trained solely on Libri-light. ZeroSpeech evaluation data for English is used. 
-It is organized into subsets of differing utterance lengths (1s, 10s and 120s).
+The test set is organized into subsets of differing utterance lengths (1s, 10s and 120s)  \cite{dunbar2017zero}.
 % consists of three utterance length settings, $1$s
 % English 
 
 
-The evaluation metric is ABX subword discriminability.
+The evaluation metric is  ABX subword discriminability, same for    Libri-light and ZeroSpeech.
 The ABX task is to decide whether $X$ belongs to $x$ or $y$ if $A$ belongs to $x$ and $B$ belongs to $y$, where $A$, $B$ and $X$ are three speech segments, $x$ and $y$ are two phonemes that differ in the central sound (e.g., \quotes{beg}-\quotes{bag}). 
 Each pair of $A$ and $B$ are generated by the same speaker. 
-ABX error rates for \textit{within-speaker} and \textit{across-speaker} are evaluated separately, depending on whether $X$ and $A(B)$ belong to the same speaker. 
-\subsection{APC setup}
+ABX error rates for \textit{within-speaker} and \textit{across-speaker} are evaluated separately, depending on whether $X$ and $A(B)$ belong to the same speaker. Software to compute ABX error rates on Libri-light and ZeroSpeech are both provided by their developers.
+\subsection{APC and comparing method}
+The APC model consists of an encoder which is implemented as a  multi-layer uni-directional LSTM network. Residual connections are made between two consecutive layers.  
+Each LSTM layer has $100$ dimensions.
+Unless specified, the number of LSTM layers is $3$.
+The prediction step $n$ is set to  the optimal value within $\{1,2,3,4,5\}$. Our preliminary experiments showed that $n$ larger than $5$ would lead to rapid degradation. 
+The input features to APC are $13$-dimension MFCC with cepstral mean normalization (CMN) at speaker level. 
+The model is trained for $100$ epochs using the Adam optimizer \cite{kingma2014adam}, with an initial learning rate of $10^{-4}$. The batch size is  $32$. An open-source tool by \cite{Chung2019} is used to train the APC model. MFCC features are extracted by Kaldi \cite{povey2011kaldi}. After training, output of the top LSTM layer is extracted as APC features.
+
+FHVAE was previously applied \cite{Feng2019improving} to address the same problem as in this study. Its latent representation $\bm{z_1}$ is known of preserving linguistic content while suppressing speaker variation. Here, FHVAE is used to make comparison with APC. Both of them are unsupervised methods. The model architecture of FHVAE and its training procedure follow the settings in \cite{Feng2019improving}.
+The input features to FHVAE are  the same as  that to  APC. FHVAE training is implemented using an open-source tool \cite{hsu2017nips}. Both FHVAE and APC are trained with Libri-light. 
+ % Encoder structure, LSTM no. layers, input data size, $n$ is tuned. epochs, learning rate, batch size
 \subsection{OOD ASR systems}
+There are two OOD ASR systems employed in our experiments. The first one is a Dutch ASR trained with CGN \cite{oostdijk2000spoken}, a transcribed speech corpus covering  speaking styles including conversations, read speech, broadcast news (BN), etc.
+Speech spoken by people in the Netherlands are used. The training and test data partition follows \cite{laurensw75cgn_kaldi}. The training data comprises $483$
+ hours of speech. A chain-time delay NN (TDNN) AM \cite{povey2016purely} is trained by Kaldi. It contains $7$ TDNN layers. The input features are $40$-dimension high-resolution (HR) MFCCs. Training data are speed perturbed with scales $0.9, 1.0$ and $1.1$, making the actual  amount of training data tripled. The TDNN AM is trained based on lattice-free maximum mutual information (LF-MMI) criterion \cite{povey2016purely}. Frame labels required for TDNN training are generated by forced-alignment with a GMM-HMM AM trained beforehand. The number of modeled Dutch phones is $81$ (including a silence phone).
+ A tri-gram LM is trained using training data transcriptions. 
+The Dutch ASR gives $8.98\%$ word error rate (WER) on the CGN BN test set.
+
+The second OOD ASR system is a Mandarin ASR trained with Aidatatang\_200zh, a read speech corpus developed by \cite{aidatatang}. The training set comprises $140$ hours of speech. A chain-TDNN AM is trained. This AM has a similar architecture with the Dutch ASR AM mentioned above. The differences are: input features are $40$-dimension MFCCs appended by $3$-dimension pitch features \cite{ghahremani2014pitch}; the number of modeled Mandarin phones is $119$ (including a silence phone). 
+A tri-gram LM is trained using training data transcriptions.
+The Mandarin ASR gives $6.37\%$ character error rate (CER) on Aidatatang\_200zh test set.
+
+%  ; Speech by people from the Netherlands are used; This corpus comprises conversations, interviews, lectures, debates, read speech and broadcast news. Training and test data partition follows \cite{laurensw75cgn_kaldi}
+% Training: $483$ hours, chain model, 
+% TDNN, layer structure, input features, $81$ modeled phones (including a silence phone), $3,488$ triphone HMM states.
+% gives WER $8.98\%$ on broadcast news test set. 
+
+% Mandarin ASR trained with Aidatatang\_200zh \cite{aidatatang}
+% Training data contains $140$ hours speech, read speech, TDNN model, input is MFCC plus pitch, $119$ modeled phones (including a silence phone), $4,400$ triphone HMM states , CER $6.37\%$ on test set. 
 \subsection{DNN-BNF setup}
+DNN-BNF is trained using Libri-light (English) training data and cross-lingual phone labels. 
+There are two DNN-BNF models trained in the experiments. One is trained with labels generated by the Dutch ASR, while the other is trained with labels by the Mandarin ASR. To obtain Dutch or Mandarin frame labels for English training data, $40$-dimension HR MFCC features (appended by pitch features if to Mandarin ASR) of Libri-light are extracted, and fed as inputs to the Dutch/Mandarin ASR system for decoding. 
+During decoding, the LM to AM weight ratio is set to $0.001$.
+The decoding results, i.e. word transcriptions,  are  forced-aligned by the Dutch/Mandarin AM to generate HMM state alignments\footnote{Here \textit{alignment} is slightly different from the `norm', as it contains alternative pronunciations. This is required by chain model training of DNN-BNF.} as frame labels.
+
+The DNN-BNF consists of $7$ feed-forward layers with ReLU activation. Each layer has $450$ dimensions except a $40$-dimension BN layer at the second top. The DNN-BNF is implemented  as a chain model in Kaldi. The training procedure  is based on  LF-MMI criterion. 
+The inputs to DNN-BNF are APC  features with contextual splicing $\{0,\pm 1\}$.
+Training labels are either Dutch  or Mandarin frame labels. After DNN-BNF training, $40$-dimension BNFs are extracted as the learned subword-discriminative representation of target speech. 
+
+% and phonetic-alignments in Dutch/Mandarin. 
+% One could directly obtain frame labels from phonetic-alignments. However we rely on transcriptions to be aligned by Dutch/Mandarin AM. Just for practical consideration, as DNN-BNF is under Kaldi nnet3 recipe, 
+%[kaldi chain model numerator FST]Instead of enforcing a particular pronunciation of the training data, we use as our reference a lattice of alternative pronunciations of the training data, generated by a lattice-generating decoding procedure using an utterance-specific graph as the decoding graph. This generates all alignments of pronunciations that were within a beam of the best-scoring pronunciation.
+
+
+
+The DNN-BNF model could also be trained using conventional spectral features as inputs. 
+In such case, DNN-BNF training keeps the same as mentioned above, except that input features are $40$-dimension HR MFCCs with contextual splicing. After training, the BNF representation is   extracted.
+% as a reference.
+% including cross-lingual phone labeling, and DNN-BNF training.
+
 \section{Results and discussion}
+\subsection{Effectiveness of APC features }
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\linewidth]{apc_fhvae_mfcc.png}
+    \caption{ABX error rate  of features learned by APC, FHVAE and official MFCC baseline on Libri-light. (Avg. over $4$ sets.) }
+    \label{fig:apc_fhvae_mfcc}
+\end{figure}
+ABX error rates ($\%$) of features learned by APC and FHVAE with respect to different amount of training data are shown in Figure \ref{fig:apc_fhvae_mfcc}. Note that these two features are learned without performing DNN-BNF modeling. Results in  Figure \ref{fig:apc_fhvae_mfcc} are computed by taking average of ABX error rates over all the $4$ evaluation sets in Libri-light. The official MFCC baseline   \cite{kahn2019librilight} is also shown in this Figure. It can be observed that both APC features and FHVAE $\bm{z_1}$ features outperform MFCC features. The APC features are consistently superior to $\bm{z_1}$ in all the training data amount settings ($13 \sim 526$ hours). 
+While APC model is not aimed explicitly at suppressing speaker variation,   
+Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that APC features are more effective than FHVAE $\bm{z_1}$ in distinguishing subword units across different speakers.
+
+% (-) a curve showing ABX error rate of APC features, FHVAE latent segment variables and MFCC features w.r.t training data amount.
+
+\subsection{Cross-lingual phone-aware DNN-BNF}
+
+\subsection{Effect of OOD languages}
+compare results of dnn-bnfs with Dutch ASR labels and Mandarin ASR labels.
 % \section{Discussion}
-
-This is the discussion. This is the discussion. This is the discussion. Is there any discussion?
-
+\subsection{ZeroSpeech 2017 results}
+report our results and supervised topline, as well as recent papers benchmarked here, \cite{riviere2020unsupervised} used Librispeech-360 to train CPC; \cite{shibata2017composite} best system used 10 languages including English labeled data; \cite{chorowski2019unsupervised} used ZRSC training data only.
 
 \section{Conclusions}
 
