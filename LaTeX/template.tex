@@ -113,7 +113,7 @@ The two research directions mentioned above could also be combined.
 % to  achieve improved performance. 
 For instance, \cite{feng2019_TASLP} proposed to 
 {\color{blue}
-apply the DNN-BNF model, and  applied  unsupervised   DPGMM  and OOD ASR systems  to  generate two types of frame labels for multi-task DNN-BNF learning. 
+apply the DNN-BNF model, and  utilized  unsupervised   DPGMM  and OOD ASR systems  to  generate two types of frame labels for multi-task DNN-BNF learning. 
 % The BNFs are extracted by the DNN-BNF model. 
 The results  demonstrated the complementarity of the two label types in  subword modeling.
 % that applying two types of labels is superior to applying either one type.
@@ -147,13 +147,15 @@ In  the second stage, a DNN-BNF back-end is trained, using APC pretrained featur
 % are used as input features to train a DNN-BNF  back-end. 
 Frame labels required for DNN-BNF training are obtained based on an OOD language-mismatched ASR system.  
 The BNFs are then extracted as the desired subword-discriminative representation. 
-The efficacy of cross-lingual frame labeling in unsupervised subword modeling  has been shown by \cite{feng2018exploiting,feng2019_TASLP}. In this study, cross-lingual phone-aware DNN-BNF is combined  with APC pretraining to achieve further performance improvement.
+The efficacy of cross-lingual frame labeling in unsupervised subword modeling  has been shown by \cite{feng2018exploiting,feng2019_TASLP}. In this study, 
+ DNN-BNF modeling with cross-lingual labels is
+% cross-lingual phone-aware DNN-BNF is 
+combined  with APC pretraining to achieve further performance improvement.
 % in unsupervised subword modeling.
 % , where cross-lingual labels are obtained by applying an OOD ASR system.
 % an OOD ASR system is applied to assign a phone label for each target untranscribed speech frame.
 % of target zero-resource speech. 
 % These cross-lingual phone labels and APC pretrained features are used  to train DNN-BNF models. 
-% XXX was applied and is referred to as cross-lingual phone-aware modeling
 % effective Approaches 
 % 1. Purely unsupervised approaches
 %   1.1 DPGMM
@@ -258,13 +260,12 @@ To obtain cross-lingual labels, the OOD ASR is used to decode  and find the best
 
 % It is worth noting that decoding results depend on the relative weighting  of the ASR AM and language model (LM). In this study, the LM carries a very small weight, in order to ensure decoding results mainly reflect acoustic characteristics of target speech.
 
-After obtaining cross-lingual  phone labels, the DNN-BNF is trained, and used to  extract BNFs for target zero-resource speech as the subword-discriminative feature representation. 
+After obtaining cross-lingual  phone labels, the DNN-BNF can be trained in a supervised manner \cite{grezl2007probabilistic}, and used to  extract BNFs   as the subword-discriminative feature representation. 
 % The cross-lingual HMM labels are used as supervision for in-domain speech data in DNN-BNF modeling.
 % After obtaining cross-lingual  HMM state labels, a DNN-BNF model is trained with target speech, using these labels as supervision.  
 % The DNN-BNF is trained to optimize cross-lingual phone classification accuracy.
 The input features to DNN-BNF are APC features. 
 % After training, the DNN-BNF is used to extract BNFs for target speech as the subword-discriminative feature representation. 
-% XXX cross-lingual phone-aware manner.
 The choice of language identities of OOD ASR systems is flexible in principle. 
 In the present study, OOD ASR systems for two different languages are utilized to generate phone labels. They are compared in the experiments.
 % to generate cross-lingual labels, in order to study the effect  of OOD  language identities on unsupervised subword modeling.
@@ -325,13 +326,18 @@ The test set is organized into subsets of differing   lengths (1s, 10s and 120s)
 % English 
 
 
-The evaluation metric is  ABX subword discriminability, same for    Libri-light and ZeroSpeech.
-The ABX task is to decide whether $X$ belongs to $x$ or $y$ if $A$ belongs to $x$ and $B$ belongs to $y$, where $A$, $B$ and $X$ are three speech segments, each consisting of $3$ consecutive phonemes (e.g. \quotes{b-e-g}). $x$ and $y$ are two different phonemes. By saying $X$ belongs to $x$, it means the central phoneme in $X$ is $x$. 
-Details of the ABX error rate computation can be found in \cite{dunbar2017zero}. A low ABX error rate indicates the learned features are good at distinguishing subword units. ABX error rates for \textit{within-speaker} and \textit{across-speaker} are evaluated separately, depending
+The evaluation metric is  ABX subword discriminability \cite{dunbar2017zero}.
+In the ABX task, $A$, $B$ and $X$ are three speech segments, $x$ and $y$ are two different phonemes. $A \in x$, $B \in y$, $X \in x$ or $y$. An error occurs if under a pre-defined distance measure $d$, $d(A,X) > d(B,X)$, given $X \in x$, and vice versa.
+% is to decide whether $X$ belongs to $x$ or $y$ if $A$ belongs to $x$ and $B$ belongs to $y$, where $A$, $B$ and $X$ are three speech segments, $x$ and $y$ are two different phonemes. 
+% each consisting of $3$ consecutive phonemes (e.g. \quotes{b-e-g}). 
+% $x$ and $y$ are two different phonemes. By saying $X$ belongs to $x$, it means the central phoneme in $X$ is $x$. 
+Details of  ABX error rate computation can be found in \cite{dunbar2017zero}, where dynamic time warping is chosen as the distance measure. Segments $A$ and $B$ always belong to the same speaker. ABX error rates for \textit{within-speaker} and \textit{across-speaker} are evaluated separately, depending
 on whether X and A(B) belong to the same speaker.
+% A low ABX error rate is preferable as it indicates  the feature representation is good at distinguishing subword units. 
 % Each pair of $A$ and $B$ are generated by the same speaker. 
 % ABX error rates for \textit{within-speaker} and \textit{across-speaker} are evaluated separately, depending on whether $X$ and $A(B)$ belong to the same speaker. Software to compute ABX error rates on Libri-light and ZeroSpeech are both provided by their developers.
 \subsection{APC and comparing method}
+\label{subsec:exp_setup_apc_fhvae}
 The APC model is implemented as a  multi-layer  LSTM network. Residual connections are made between two consecutive layers.  
 Each LSTM layer has $100$ dimensions.
 Unless specified, the number of LSTM layers is $3$.
@@ -341,7 +347,7 @@ The model is trained for $100$ epochs using the Adam optimizer \cite{kingma2014a
 % MFCC features are extracted by Kaldi \cite{povey2011kaldi}. 
 After training, the top LSTM layer's output is extracted as APC features.
 
-FHVAE was previously adopted \cite{Feng2019improving} as the front-end to address the same problem as in this study. Its latent representation $\bm{z_1}$ is known of preserving linguistic content while suppressing speaker variation. Here, FHVAE is used to make comparison with APC at front-end level. The model architecture of FHVAE and its training procedure follow the settings in \cite{Feng2019improving}.
+FHVAE was previously adopted \cite{Feng2019improving} as the front-end to address the same problem as in this study. Its latent representation $\bm{z_1}$ is known of preserving linguistic content while suppressing speaker variation \cite{hsu2017nips}. Here, $\bm{z_1}$ is used to make comparison with the APC feature. The model architecture of FHVAE and its training procedure follow the settings in \cite{Feng2019improving}.
 The input feature representation is the same for FHVAE and  APC. FHVAE training is implemented using an open-source tool \cite{hsu2017nips}. Both FHVAE and APC are trained with Libri-light. 
  % Encoder structure, LSTM no. layers, input data size, $n$ is tuned. epochs, learning rate, batch size
 \subsection{OOD ASR systems}
@@ -393,9 +399,9 @@ In such case, DNN-BNF training keeps the same as mentioned above, except that in
 \section{Results and discussion}
 \subsection{Effectiveness of APC features }
 
-ABX error rates ($\%$) of features learned by APC and FHVAE with respect to different amount of training data are shown in Figure \ref{fig:apc_fhvae_mfcc}.
+ABX error rates ($\%$) of  APC features  and FHVAE features ($\bm{z_1}$, mentioned in Section \ref{subsec:exp_setup_apc_fhvae}) with respect to different amount of training data are shown in Figure \ref{fig:apc_fhvae_mfcc}.
 {\color{blue}
-In this subsection, APC and FHVAE features are directly evaluated by the ABX task, without being modeled by the DNN-BNF. It is performance comparison at front-end.}
+In this subsection, APC  features and $\bm{z_1}$ are directly evaluated by the ABX task, without being modeled by the  DNN-BNF back-end. The performance comparison is made at front-end.}
 \begin{figure}[!t]
     \centering
     \includegraphics[width=.9\linewidth]{LaTeX/apc_fhvae_mfcc_no_sub.png}
@@ -403,9 +409,9 @@ In this subsection, APC and FHVAE features are directly evaluated by the ABX tas
     \label{fig:apc_fhvae_mfcc}
 \end{figure}
 % these two features are learned without performing DNN-BNF modeling. 
-ABX results in  Figure \ref{fig:apc_fhvae_mfcc} are averaged values over the $4$ evaluation sets in Libri-light. The official MFCC baseline   \cite{kahn2019librilight} is also shown in this Figure. It can be observed that both APC features and FHVAE $\bm{z_1}$ features outperform MFCC features. The APC features are consistently superior to $\bm{z_1}$ in all the training data amount settings ($13 \sim 526$ hours, i.e. sub0.9K to unlab-600). 
+ABX results in  Figure \ref{fig:apc_fhvae_mfcc} are averaged values over the $4$ evaluation sets in Libri-light. The official MFCC baseline   \cite{kahn2019librilight} is also shown in this Figure. It can be observed that both APC features and $\bm{z_1}$  outperform MFCC features. The APC features are consistently superior to $\bm{z_1}$ in all the training data amount settings ($13 \sim 526$ hours, i.e. sub0.9K to unlab-600). 
 While APC model is not aimed explicitly at suppressing speaker variation as FHVAE is,   
-Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that APC features are more effective than FHVAE $\bm{z_1}$ in distinguishing subword units across different speakers.
+Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that APC features are more effective than   $\bm{z_1}$ in distinguishing subword units across different speakers.
 
 % (-) a curve showing ABX error rate of APC features, FHVAE latent segment variables and MFCC features w.r.t training data amount.
 
@@ -453,7 +459,7 @@ CPC \cite{kahn2019librilight}&-&- &$7.36$&	$9.39$&	$6.90$&	$9.59$&	$8.31$\\
 \label{tab:dnn_bnf}
 \end{table}
 ABX error rates (\%) of BNFs extracted from  DNN-BNF are listed in Table \ref{tab:dnn_bnf}. The second and third columns  denote input feature types and frame labels for training DNN-BNF models.
-The performance  of    APC  and CPC features (by \cite{kahn2019librilight}) are also listed for reference. {\color{blue}APC and CPC are front-end features which are not modeled by the DNN-BNF back-end.}
+The performance  of    APC  and CPC features (by \cite{kahn2019librilight}) are also listed for reference. {\color{blue}APC and CPC are   not modeled by the DNN-BNF back-end.}
 % Note that the APC model in Table \ref{tab:dnn_bnf} consists of $5$ LSTM layers instead of $3$. 
 All the models are trained with unlab-600.   From this Table, it is observed  that:
 
