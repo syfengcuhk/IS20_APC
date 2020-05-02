@@ -12,16 +12,16 @@
 \usepackage{footnote}
 \makesavenoteenv{tabular}
 \newcommand{\quotes}[1]{``#1''}
-\setlength{\intextsep}{3pt plus 0pt minus 3pt} %distance between floats on the top or the bottom and the text
-\setlength{\textfloatsep}{3pt plus 0pt minus 4pt}%distance between two floats
-\setlength{\floatsep}{3pt plus 0pt minus 2pt}%distance
+\setlength{\intextsep}{2pt plus 0pt minus 3pt} %distance between floats on the top or the bottom and the text
+\setlength{\textfloatsep}{2pt plus 0pt minus 4pt}%distance between two floats
+\setlength{\floatsep}{2pt plus 0pt minus 2pt}%distance
 \usepackage{soul}
 \title{Unsupervised Subword Modeling Using Autoregressive Pretraining and Cross-Lingual Phone-Aware Modeling}
 \name{Siyuan Feng, Odette Scharenborg}
 %The maximum number of authors in the author list is twenty. If the number of contributing authors is more than twenty, they should be listed in a footnote or in acknowledgement section, as appropriate.
 \address{
   Multimedia Computing Group, 
-  Delft University of Technology,  the Netherlands}% \\
+  Delft University of Technology, Delft,  the Netherlands}% \\
  %$^2$Department of Electronic Engineering, The Chinese University of Hong Kong, Hong Kong}
 \email{\{s.feng, o.e.scharenborg\}@tudelft.nl}
 
@@ -30,29 +30,17 @@
 \maketitle
 % 
 \begin{abstract}
-This study addresses unsupervised subword modeling, i.e., learning of frame-level feature representations that can distinguish subword units of a language. 
-% Our proposed approaches combine unsupervised feature learning techniques with cross-lingual knowledge transfer. 
+This study addresses unsupervised subword modeling, i.e., learning of 
+feature representations that can distinguish subword units of a language. 
 The proposed approach adopts a two-stage bottleneck feature (BNF) learning framework, which consists of 
-autoregressive predictive coding (APC) as a front-end  and a cross-lingual phone-aware DNN-BNF model as a back-end. APC pretraining has recently been shown effective in learning representations that 
-{\color{blue} could benefit}
-% is accessible to 
-various downstream speech tasks. This study applies APC pretrained features as inputs to a DNN-BNF model. An out-of-domain (OOD) language-mismatched ASR system is used to provide cross-lingual phone labels for DNN-BNF model training. Finally, BNFs are extracted as the subword-discriminative feature representation. A second aim of this work is to investigate the sensitivity of the proposed approach's effectiveness to the amount of training data. The results on Libri-light and ZeroSpeech 2017 show that APC is effective in front-end feature pretraining.
-% , and surpasses a previously adopted approach. 
-% It surpasses a previously adopted FHVAE approach. 
-Our whole system outperforms the state of the art on both databases. 
-Moreover, the proposed system is less sensitive to amount of training data when the training data is over $50$ hours.  
-Concluding, APC pretraining leads to a reduction of needed training material from 5K to around 200 hours with little performance degradation.
-% APC pretraining could thus save data amount from over $5,000$ hours to around $200$ hours for training the proposed system with little performance degradation.  
-% Cross-lingual phone labeling for English data by a Dutch ASR is slightly better than by a Mandarin ASR. This could be explained as the stronger similarity between English and Dutch.  
-% The APC model was shown effective in
+autoregressive predictive coding (APC) as a front-end  and a cross-lingual phone-aware DNN-BNF model as a back-end. 
+APC pretrained features are set as input features to a DNN-BNF model. An out-of-domain (OOD) language-mismatched ASR system is used to provide cross-lingual phone labels for DNN-BNF model training. Finally, BNFs are extracted as the subword-discriminative feature representation. A second aim of this work is to investigate the robustness of the proposed approach's effectiveness to different amounts of training data. The results on Libri-light and ZeroSpeech 2017 databases show that APC is effective in front-end feature pretraining.
+Our whole system outperforms the state of the art on both databases.
+% Cross-lingual phone labels for  English data by a Dutch ASR are better than by a Mandarin ASR, possibly linked to the larger similarity of Dutch and English.
+Moreover, the proposed system is less sensitive to training data amount  when the training data is over 50 hours.  
+Concluding, APC pretraining leads to a reduction of needed training material from over 5000 hours to around 200 hours with little performance degradation.
 
-%   For your paper to be published in the conference proceedings, you must use this document as both an instruction set and as a template into which you can type your own text. If your paper does not conform to the required format, you will be asked to fix it.
-%   Please do not reuse your past papers as a template. To prepare your paper for submission, please always download a fresh copy of this template from the conference website and please read the format instructions in this template before you use it for your paper.
-%   Conversion to PDF may cause problems in the resulting PDF or expose problems in your source document. Before submitting your final paper in PDF, check that the format in your paper PDF conforms to this template. Specifically, check the appearance of the title and author block, the appearance of section headings, document margins, column width, column spacing, and other features such as figure numbers, table numbers and equation number. In summary, you must proofread your final paper in PDF before submission.
 
-    % The references should begin on an earlier page immediately after the Acknowledgements section, and continue onto the 5\textsuperscript{th} page. If no space is available on an earlier page, then the references may begin on the 5\textsuperscript{th} page.
-
-%   Index terms should be included as shown below.
 \end{abstract}
 \noindent\textbf{Index Terms}: unsupervised subword modeling, autoregressive predictive coding, cross-lingual knowledge transfer
 
@@ -74,7 +62,7 @@ Unsupervised acoustic modeling (UAM) refers to the task of modeling basic acoust
 %Recently, there has been an increasing  interest in unsupervised acoustic modeling \cite{chen2015parallel,heck2017feature,Kamper2017segmental,Tjandra2019,Feng2019combining,Ondel2019Bayesian}, which resulted in the Zero Resource Speech Challenges (ZeroSpeech). 
 % This is partially driven by Zero Resource Speech Challenges (ZeroSpeech) \cite{versteegh2015zero,dunbar2017zero,Dunbar2019}.
 %One  research problem tackled by Zero Resource Speech Challenges (ZeroSpeech) \cite{versteegh2015zero,dunbar2017zero,Dunbar2019}
-An important task in UAM is to learn frame-level feature representations that can distinguish subword units of the language for which no transcriptions are available, i.e., the target language, and is 
+An important task in UAM is to learn frame-level feature representations that can distinguish subword units of the language for which no transcriptions are available, i.e., the \textit{target} language, and is 
 % concerned language and is
 robust to non-linguistic factors, such as speaker change \cite{versteegh2015zero,dunbar2017zero}. This problem is referred to as \textit{unsupervised subword modeling}, and is the focus of this study. It is essentially a feature representation learning problem.
 % It is essentially an  unsupervised feature   learning problem.
@@ -92,10 +80,14 @@ There are many interesting attempts  to unsupervised subword modeling \cite{chen
 % {\color{blue}
 In a recent study \cite{Feng2019improving}, a two-stage bottleneck feature (BNF) learning framework was proposed.
 % investigated. 
-The first stage, i.e., the front-end, used the factorized hierarchical variational autoencoder (FHVAE) \cite{hsu2017nips} to learn speaker-invariant features. The second stage, the back-end, consisted of a DNN-BNF model \cite{chen2017multilingual}, which used the FHVAE pretrained features as input features. In the case of unsupervised acoustic modeling, no frame labels are available for DNN-BNF model training.
+The first stage, i.e., the front-end, used the factorized hierarchical variational autoencoder (FHVAE) \cite{hsu2017nips} to learn speaker-invariant features. The second stage, the back-end, consisted of a DNN-BNF model \cite{chen2017multilingual}, which used the FHVAE pretrained features as input features and generated BNFs as the desired subword-discriminative acoustic feature representations. In the case of unsupervised acoustic modeling, no frame labels are available for DNN-BNF model training.
 % Frame labels required for DNN-BNF training  are not directly available due to the absence of transcriptions. 
 In \cite{Feng2019improving},
- DPGMM was adopted  {\color{blue} as a building block of the back-end} to generate pseudo-phone labels for the speech frames.
+ DPGMM was adopted  
+%  {\color{blue} 
+ as a building block of the back-end
+%  } 
+ to generate pseudo-phone labels for the speech frames.
 %  ,
 %  }
 In another recent study  \cite{chorowski2019unsupervised}, the vector quantized VAE (VQ-VAE) \cite{oord2017neural} was applied to directly learn the desired feature representation without a back-end model such as the DNN-BNF, and is comparable to state-of-the art performance \cite{heck2017feature}. 
@@ -127,7 +119,7 @@ The two research strands mentioned above can also be combined.
 % to  achieve improved performance. 
 For instance, \cite{feng2019_TASLP} proposed to 
 % {\color{blue}
-apply the DNN-BNF model, and  utilized  unsupervised   DPGMM  and OOD ASR systems  to  generate two types of frame labels for multi-task DNN-BNF learning. The first and second label types correspond to  the two research strands respectively. 
+apply the DNN-BNF model, and  utilized  unsupervised   DPGMM  and OOD ASR systems  to  generate two types of frame labels for multi-task DNN-BNF learning. The two label types correspond to  the two research strands respectively. 
 % The BNFs are extracted by the DNN-BNF model. 
 The results  showed the complementarity of the two label types in unsupervised subword modeling.
 % that applying two types of labels is superior to applying either one type.
@@ -141,20 +133,20 @@ The results  showed the complementarity of the two label types in unsupervised s
 The present study  adopts a two-stage BNF learning framework similar to  \cite{Feng2019improving}, and aims at
 % }
 % aims at 
-combining unsupervised   learning techniques, specifically autoregressive predictive coding (APC) in the front-end, with  cross-lingual   knowledge transfer in the back-end. 
+combining unsupervised   learning techniques, specifically autoregressive predictive coding (APC) as a front-end, with  cross-lingual   knowledge transfer in the back-end. 
 % Our proposed approach consists  front-end unsupervised pretraining and back-end DNN-BNF  modeling. 
 % The two-stage framework is similar to \cite{Feng2019improving} as mentioned above.
 % This two-stage framework is similar to \cite{Feng2019improving} mentioned above.
 % In the first stage,  APC  is adopted as the unsupervised learning front-end.
-APC   has recently been shown   \cite{Chung2019} to learn speech feature representations that are beneficial to 
+Recently, APC   has   been shown   \cite{Chung2019} to learn speech feature representations that are beneficial to 
 % .... and to outperform other unsupervised ....
 % was recently proposed \cite{Chung2019} to learn speech feature representation that is beneficial to 
-various downstream speech tasks, and outperform other
+various downstream   tasks, and outperform other effective
 % to perform well, as compared to spectral features. 
 % It has been shown to outperform other  
 unsupervised methods such as contrastive predictive coding (CPC) \cite{oord2018cpc} 
 % and problem-agnostic speech encoder (PASE) \cite{Pascual2019} 
-in ASR, speech translation and speaker verification (SV)  \cite{Chung2019generative}.
+in ASR, speech translation and speaker verification   \cite{Chung2019generative}.
 % {\color{blue}
  APC preserves   phonetic (subword) and speaker information from the original speech signal, while the two information types are more  separable. This makes APC a possibly interesting  method for unsupervised subword modeling. %,
 %   and are more accessible to task-specific back-ends.
@@ -162,17 +154,21 @@ in ASR, speech translation and speaker verification (SV)  \cite{Chung2019generat
 % While it is not designed exclusively for learning subword-discriminative features, we expect  front-end APC pretraining
 % could increase the accessibility of phonetic information   to the  back-end of our adopted framework.
 % pretrained features could encode subword information more easily accessible to our back-end modeling. 
-In this paper, we investigate the effectiveness of APC in unsupervised subword modeling for the first time.
+In this paper, we investigate the effectiveness of APC in this task for the first time.
 % Motivated by this, we, for the first time, propose to apply APC in unsupervised subword modeling.
 
 In  the second stage, a DNN-BNF back-end is trained, using the APC pretrained features as input features. 
 % APC pretrained   features 
 % and cross-lingual phone labels, obtained based on an OOD ASR system,  
 % are used as input features to train a DNN-BNF  back-end. 
-Frame labels required for training the DNN-BNF model are obtained using an OOD  ASR system as was done in \cite{feng2019_TASLP}.  
-{\color{blue} By doing so, cross-lingual phonetic knowledge is exploited.}
-The BNFs are then extracted as the desired subword-discriminative acoustic feature representations. 
-{\color{blue} Two OOD ASR systems trained on  different non-target languages are employed for comparison, in order to study the effect of target and non-target language similarity on the performance of the proposed approach.}
+Frame labels required for  DNN-BNF model training are obtained using an OOD  ASR system as was done in \cite{feng2019_TASLP}.  
+% {\color{blue} 
+By doing so, cross-lingual phonetic knowledge is exploited.
+% }
+% The BNFs are then extracted as the desired subword-discriminative acoustic feature representations. 
+% {\color{blue} 
+Two OOD ASR systems trained on  different OOD languages are employed for comparison, in order to study the effect of target and OOD language similarity on the performance of the proposed approach.
+% }
 % The efficacy of cross-lingual frame labeling in unsupervised subword modeling  has been shown by \cite{feng2018exploiting,feng2019_TASLP}. In this study, 
 % the effect of APC pretraining in unsupervised subword modeling 
 % is investigated  by combining with  DNN-BNF.
@@ -198,7 +194,9 @@ The BNFs are then extracted as the desired subword-discriminative acoustic featu
 
 % untranscribed training data amount.  
 For low-resource languages for which transcribed data are absent, 
-even unlabeled speech can be costly to collect. The robustness of the method against limited amounts of training material is therefore an important topic, however has received little attention in the literature so far. The second aim of this work is therefore to systematically investigate the robustness 
+even unlabeled speech can be costly to collect. The robustness of unsupervised subword modeling methods
+% the method 
+against limited amounts of training material is therefore an important topic, however has received little attention in the literature so far. The second aim of this work is therefore to systematically investigate the robustness 
 % sensitivity 
 of the proposed approach's effectiveness to different amounts of training data. Specifically, we varied the amount of training data from $10$ hours to over $500$ hours.
  
@@ -222,23 +220,25 @@ The general framework of our proposed approach is illustrated in Figure \ref{fig
 % stage.
 % and used to extract pretrained features.
 % is used to pretrain the data 
-Next, an OOD ASR system trained on a language different from the target language  assigns a phone label to every frame of the target language's speech data through decoding. Pretrained features  created by the APC model and the cross-lingual phone labels created by the OOD ASR are then used to train a DNN-BNF model at back-end, from which BNFs are extracted as the subword-discriminative representation in the final step.
+Next, an OOD ASR system trained on a language different from the target language  assigns a phone label to every frame of the target language's speech data through decoding. Pretrained features  created by the APC model and the cross-lingual phone labels created by the OOD ASR are then used to train a DNN-BNF model in the back-end, from which BNFs are extracted as the subword-discriminative representation in the final step.
 
-{\color{blue}APC pretraining will be compared with an FHVAE approach \cite{hsu2017nips} which was used in related previous work \cite{Feng2019improving}. The whole pipeline of our approach will be compared with the system consisting of only the back-end DNN-BNF model.
+% {\color{blue}
+Front-end APC pretraining will be compared with an FHVAE approach \cite{hsu2017nips} which was used in related previous work \cite{Feng2019improving}. The whole pipeline of our approach will be compared with a system consisting of only the back-end DNN-BNF model, and a CPC approach \cite{oord2018cpc} applied in the same task \cite{kahn2019librilight}.
 % , but without front-end APC pretraining.
-Moreover, two different languages will be used to train two different OOD ASR systems for comparison.}
+Moreover, two different languages will be used to train two different OOD ASR systems for comparison.
+% }
 \subsection{APC pretraining}
 \label{subsec:apc}
-APC is an unsupervised  feature representation learning method  with applications to various downstream tasks \cite{Chung2019}. 
+% APC is an unsupervised  feature representation learning method  with applications to various downstream tasks \cite{Chung2019}. 
 % It was proposed by \cite{Chung2019} to learn frame-level feature representation which facilitates a wide range of downstream tasks. 
 % The effectiveness of unsupervised APC pretraining  has been demonstrated in   ASR and speaker verification (SV) tasks \cite{Chung2019}. This  indicates that APC pretrained features could preserve both phonetic (subword) and speaker information from the original speech signal, meanwhile the two types of information are more  separable  to task-specific back-ends, comparing to spectral features and features learned by other methods \cite{Chung2019}. 
 % In other words, 
 In our concerned task, previously adopted feature learning methods 
 % such as FHVAE \cite{Feng2019improving} and adversarial training \cite{Higuchi2019} 
-usually target suppressing speaker variation, such as FHVAE \cite{Feng2019improving} and feature-space maximum likelihood linear regression (fMLLR) \cite{heck2017feature}. In contrast, 
-APC which is adopted in the present study aims at learning
+usually target suppressing speaker variation, such as FHVAE \cite{Feng2019improving} and speaker adaptation \cite{heck2017feature}. In contrast, 
+APC aims at learning
 % the present study applies APC to learn 
-a representation that keeps information from speech, meanwhile phonetic information is made more separable to speaker information. The learned representation is considered less risky of losing phonetic information than 
+a representation that keeps information from speech, while phonetic information is made more separable from speaker information. The learned representation is considered less risky of losing phonetic information than 
 % {\color{blue}
   representations learned by methods in \cite{Feng2019improving,heck2017feature}.
 % }
@@ -247,19 +247,19 @@ a representation that keeps information from speech, meanwhile phonetic informat
 
 % both subword and speaker information and they are more separable, hence facilitates back-end modeling to learn subword-discriminative representation of speech.%,  %The present study adopts APC to learn a feature representation
 
-Let us assume a set of unlabeled speech frames $\{\bm{x_1}, \bm{x_2}, \ldots, \bm{x_T}\}$ for training, where $T$ is the total number of frames. At each time step $t$, the encoder of APC model $\textrm{Enc}$ reads as input
+Let us assume a set of unlabeled speech frames $\{\bm{x_1}, \bm{x_2}, \ldots, \bm{x_T}\}$ for training, where $T$ is the total number of frames. At each time step $t$, the encoder of APC model $\textrm{Enc} (\cdot)$ reads as input  a feature vector 
 $\bm{x_t}$, 
 % $\bm{x_{1:t}}=\{\bm{x_1},\ldots,\bm{x_t}\}$ 
-and outputs $\bm{y_t}$ (same dimension as $\bm{x_t}$) based on all the previous inputs $\bm{x_{1:t}}=\{\bm{x_1},\ldots,\bm{x_t}\}$,
+and outputs  a feature vector  $\bm{\hat{x}_t}$ (same dimension as $\bm{x_t}$) based on all the previous inputs $\bm{x_{1:t}}=\{\bm{x_1},\ldots,\bm{x_t}\}$,
 \begin{equation}
-    \bm{y_t} = \textrm{Enc} (\bm{x_{1:t}}).
+    \bm{\hat{x}_t} = \textrm{Enc} (\bm{x_{1:t}}).
     \label{eqt:enc}
 \end{equation}
-The goal of APC is to let $\bm{y_t}$ be as close as possible to $\bm{x_{t+n}}$, where $n$ is a pre-defined constant positive integer, denoted as \textit{prediction step}. 
+The goal of APC is to let $\bm{\hat{x}_t}$ be as close as possible to $\bm{x_{t+n}}$, where $n$ is a pre-defined constant positive integer, denoted as \textit{prediction step}. 
 % In other words, an APC tries to predict a speech frame that is $n$ steps ahead of the current time. 
-The loss function during APC   training is defined as: $\textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{y_t} - \bm{x_{t+n}} \right|$.
+The loss function during APC   training is defined as: $\textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{\hat{x}_t} - \bm{x_{t+n}} \right|$.
 % \begin{equation}
-%     \textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{y_t} - \bm{x_{t+n}} \right|.
+%     \textrm{Loss} = \sum_{t=1}^{T-n} \left| \bm{\hat{x}_t} - \bm{x_{t+n}} \right|.
 %     \label{eqt:apc_loss}
 % \end{equation}
 % By minimizing the loss function in Equation (\ref{eqt:apc_loss}), the APC encoder can be trained.
@@ -267,17 +267,17 @@ Intuitively, increasing $n$ encourages the   encoder to capture contextual depen
 % more global structures in speech, 
 while a small $n$ focuses more on local smoothness.
  
-Here, the encoder of APC is realized by a long short-term memory (LSTM) \cite{hochreiter1997long} RNN. Let $L$ denote the number of LSTM layers,  Equation (\ref{eqt:enc}) is formulated as,
+Here, the encoder of APC $\mathrm{Enc} (\cdot)$ is realized by a long short-term memory (LSTM) \cite{hochreiter1997long} RNN. Let $L$ denote the number of LSTM layers,  Equation (\ref{eqt:enc}) is formulated as,
 \begin{align}
     \bm{h_0} &= \bm{x_{1:t}},    \\
     \bm{h_l} &= \textrm{LSTM}^l (\bm{h_{l-1}}), l\in \{1,2,\ldots, L\}, \\
-    \bm{y_t} &= \bm{W} \bm{h_L}.
+    \bm{\hat{x}_t} &= \bm{W} \bm{h_L},
 \end{align}
-The equations that form  $\textrm{LSTM} (\cdot)$ can be seen in \cite{sak2014long}.
+where $\bm{W}$ is a trainable projection matrix. The equations that form  $\textrm{LSTM} (\cdot)$ can be found in \cite{sak2014long}. 
 
 After APC training, the output of the top hidden layer $\bm{h_L}$ is extracted as the  learned acoustic representation, and is henceforth referred to as the  \textit{APC feature}. 
 Although in principle,  $\bm{h_l}$ of any layer $l$ could be used as the learned representation, 
-we follow \cite{Chung2019} in using the output of the top layer as they showed that this gave the best results.
+we follow \cite{Chung2019} in using the output of the top layer as they showed that this gave the best results in phone classification tasks.
 % Results in \cite{Chung2019} suggest that outputs of higher layers  are more suitable for phone classification than lower layers. Following \cite{Chung2019} we choose to use the output of the top layer.
 % , while lower layer outputs are  more suitable for speaker classification.
 % Here $\bm{h_l}$ denotes the output of  
@@ -304,21 +304,22 @@ is a DNN with a bottleneck   layer in the middle \cite{grezl2009investigation}.
 % {\color{blue}The motivation  is that
 % % Although languages vary greatly in pronunciation, 
 % speech sounds in different languages are believed to have much overlap at phone level.}
-To obtain cross-lingual phone labels, the OOD ASR is used to decode {\color{blue}  target speech utterances into  lattices,} and find the best path for every utterance. Afterwards, each speech frame is assigned with a triphone HMM state modeled by the OOD ASR. These   state labels provide phonetic representation for the target speech from a cross-lingual perspective. %They are denoted as cross-lingual phone labels.
+To obtain cross-lingual phone labels, the OOD ASR is used to decode  target speech utterances into  lattices,  and find the best path for every utterance. Afterwards, each speech frame is assigned with a triphone HMM state modeled by the OOD ASR. These   state labels provide phonetic representation for the target speech from a cross-lingual perspective. %They are denoted as cross-lingual phone labels.
 
 % It is worth noting that decoding results depend on the relative weighting  of the ASR AM and language model (LM). In this study, the LM carries a very small weight, in order to ensure decoding results mainly reflect acoustic characteristics of target speech.
 
-After obtaining triphone HMM state labels  as cross-lingual phone labels, the DNN-BNF  is trained using the pretrained APC features and the cross-lingual phone labels in a supervised manner \cite{grezl2007probabilistic}, and used to  extract BNFs   as the subword-discriminative feature representation. 
+After obtaining triphone HMM state labels  as cross-lingual phone labels, the DNN-BNF  is trained using the pretrained APC features and the cross-lingual phone labels in a supervised manner \cite{grezl2007probabilistic}, and used to  extract BNFs   as the desired subword-discriminative feature representation. 
 % BNFs are generated from the output of the bottleneck layer in the DNN-BNF model.
 % The cross-lingual HMM labels are used as supervision for in-domain speech data in DNN-BNF modeling.
 % After obtaining cross-lingual  HMM state labels, a DNN-BNF model is trained with target speech, using these labels as supervision.  
 % The DNN-BNF is trained to optimize cross-lingual phone classification accuracy.
 %The input features to DNN-BNF are APC features. 
 % After training, the DNN-BNF is used to extract BNFs for target speech as the subword-discriminative feature representation. 
-The choice of languages to train the OOD ASR systems is flexible. In the present study, OOD ASR systems for two different languages are utilized to generate the phone labels 
+% The choice of languages to train the OOD ASR systems is flexible. 
+% In the present study, OOD ASR systems for two different languages are utilized to generate the phone labels 
 % {\color{blue}
-and learn two BNF representations. 
-Effectiveness of  the two  BNF representations  are compared.%  in the experiments.
+% and learn two BNF representations. 
+% Effectiveness of  the two  BNF representations  are compared.%  in the experiments.
 % }
 % to generate cross-lingual labels, in order to study the effect  of OOD  language identities on unsupervised subword modeling.
 % its influence towards the final performance.
@@ -333,44 +334,39 @@ Effectiveness of  the two  BNF representations  are compared.%  in the experimen
 
 \subsection{Databases and evaluation metric}
 % {\color{blue}
-In our experiments, English is chosen as the target language while Dutch and Mandarin are chosen as two OOD languages. %.}
-Training data for APC pretraining and DNN-BNF model training are taken from  Libri-light \cite{kahn2019librilight}. 
+ English is chosen as the target language while Dutch and Mandarin are chosen as the two OOD languages. %.}
+Training data for APC pretraining and DNN-BNF model training are taken from  Libri-light \cite{kahn2019librilight}, 
 % Experiments in this study are carried out on two databases: Libri-light \cite{kahn2019librilight} and ZeroSpeech 2017 \cite{dunbar2017zero}. 
-Libri-light is a newly published English database and  by far the largest public database to support unsupervised subword modeling. 
+% Libri-light is 
+a newly published English database
+% and  by far the largest public database 
+to support unsupervised subword modeling. 
 % It is an English database.
 % The language in Libri-light is English. 
-The \texttt{unlab-600} and  \texttt{unlab-6K} sets from Libri-light are adopted as training data. Unlab-600 is used in both APC pretraining and DNN-BNF model training, while unlab-6K is used only in DNN-BNF model training.
-The  unlab-600 set consists of 
+The \textit{unlab-600} and  \textit{unlab-6K} sets from Libri-light are adopted. Unlab-600 is used in both APC pretraining and DNN-BNF model training, while unlab-6K is used only in DNN-BNF model training.
+Unlab-600   consists of 
 % $36,229$ utterances by $489$ speakers, summing up to
-$526$ hours of speech. Additionally, we randomly select four subsets of utterances from unlab-600 to investigate the robustness of our approach to different amounts of training material. These subsets consist of $900$ (i.e., $13$ hours), $3.6$K ($52$ hours), $7.2$K ($104$ hours), and $14.4$K ($209$ hours) training utterances. 
-The  unlab-6K  set consists of $5,273$ hours of speech.  Details of the training sets are summarized in Table \ref{tab:libri_light_data}.
-\begin{table}[!tbp]
-\renewcommand\arraystretch{0.6}
+$526$ hours of speech excluding silence.
+% non-silent speech. 
+Additionally, we randomly select four subsets of utterances from unlab-600 to investigate the robustness of our approach to different amounts of training material. These subsets consist of $900$ (i.e., $13$ hours), $3.6$K ($52$ hours), $7.2$K ($104$ hours), and $14.4$K ($209$ hours)   utterances. 
+Unlab-6K  set consists of $5,273$ hours of
+% non-silent 
+speech excluding silence.  Details of the training sets are listed in Table \ref{tab:libri_light_data}.
+\begin{table}[!t]
+\renewcommand\arraystretch{0.9}
 \centering
 \caption{Libri-light training data and its subsets.}
-\resizebox{1 \linewidth}{!}{%
-\begin{tabular}{l|cccccc}      
+\resizebox{  \linewidth}{!}{%
+\begin{tabular}{l|c|c|cccc}      
 % \hline      
-% \toprule
-Name&unlab-6K& unlab-600 & sub14.4K & sub7.2K & sub3.6K & sub0.9K \\
+\toprule
+&unlab-6K& unlab-600 & \multicolumn{4}{c}{subsets of unlab-600} \\%sub14.4K & sub7.2K & sub3.6K & sub0.9K \\
 %  & \multicolumn{3}{c|}{ Training} & Test \\
 \midrule
 \#utterances &$362,817$ &  $36,229$ & $14,400$ &$7,200$ &$3,600$ &$900$ \\
 \#speakers & $1,742$ & $489$ & $438$ & $393$ & $351$ & $244$ \\
-Hours & $5,273$ &$526$& $209$ & $104$ & $52$ & $13$ \\
-%  & Duration  &\#speakers-R\tablefootnote{``speakers-R/-L'' denotes speakers with rich/limited speech data.} &\#speakers-L\footnotemark[1]  & Duration\\
-% \hline
-% \midrule
-
-% Training hours:  & $19.3$ & $81.5$ & $105.3$ \\
-% Test hours:& $0.6$ & $0.7$ & $5.9$ \\
-% Basic acoustic unit:  & Phone & Phone & Initial-Final \\
-% \#basic units (inc. sil):& $33$ & $87$ & $61$ \\
-% \#tied CD-HMM states:& $2462$ & $3431$ & $2386$ \\ 
-% Lexicon size:& $ $ & $ 133K$& $ $ \\
-% $\#$ Phonemes: &$43$& $46$&$ 29$& $44$& $38$\\
-% \hline
-% \bottomrule
+Hours  & $5,273$ &$526$& $209$ & $104$ & $52$ & $13$ \\
+\bottomrule
 \end{tabular}%
 % \footnotetext{`speakers-R/-L' denotes speakers with rich/limited speech data}
 }
@@ -378,28 +374,43 @@ Hours & $5,273$ &$526$& $209$ & $104$ & $52$ & $13$ \\
 \end{table}
 
 % {\color{blue}
-The Dutch and Mandarin corpora used for training OOD ASR systems are the Corpus Spoken Dutch (CGN) \cite{oostdijk2000spoken} and Aidatatang\_200zh \cite{aidatatang}, respectively. 
+The Dutch and Mandarin corpora used for training the two OOD ASR systems are the Corpus Spoken Dutch (CGN) \cite{oostdijk2000spoken} and Aidatatang\_200zh \cite{aidatatang}, respectively. 
 % CGN is a  speech corpus covering various speaking styles including conversations, read speech, and broadcast news (BN).
 % Speech spoken by people in the Netherlands are used. 
-For CGN, the training and test data partition follows \cite{laurensw75cgn_kaldi}. Its training data contains $483$ hours of speech, covering various speaking styles including conversational, read and broadcast news speech.
-Aidatatang\_200zh is a read speech corpus.
+The CGN   training and test data partition follows \cite{laurensw75cgn_kaldi}. Its training data contains $483$ hours of speech, covering speaking styles including conversational and read speech and broadcast news.
+Aidatatang\_200zh is a read speech   corpus.
 % is a   read speech corpus developed by \cite{aidatatang}. The training set 
 Its training data contains $140$ hours of speech.   
 % }
+%In order to better compare our approach with previous research in this area, we also tested our approach on the Zerospeech
 
-Evaluation data are taken from  Libri-light and ZeroSpeech 2017 \cite{dunbar2017zero}. Evaluation sets in Libri-light consist of \textit{dev-clean, dev-other, test-clean} and \textit{test-other}. 
-They are identical to the sets in Librispeech
-% , a widely used  corpus for ASR 
-\cite{panayotov2015librispeech}. 
+Evaluation data are taken from  Libri-light and ZeroSpeech 2017 \cite{dunbar2017zero}. 
+ Libri-light evaluation sets consist of \textit{dev-clean, dev-other, test-clean} and \textit{test-other}, 
+% They are identical to the sets in Librispeech
+% % , a widely used  corpus for ASR 
+% \cite{panayotov2015librispeech}. 
 % {\color{blue}
-The four sets are used to evaluate the effectiveness of  both front-end pretrained features and  BNFs learned by the back-end DNN-BNF.
+with 
+% dev-/test-clean
+$*$-clean 
+having higher recording quality and accents closer to US English than  
+% dev-/test-other
+$*$-other 
+\cite{panayotov2015librispeech}.
+% }
+% {\color{blue}
+They are used to evaluate the effectiveness of  both front-end pretrained features and  BNFs learned by the back-end.
 % .}
 
-Evaluation data from ZeroSpeech 2017 contain three languages. Only English data are used, as this study regards English as the target language.
-The ZeroSpeech 2017 evaluation data are organized into subsets of differing  per-utterance lengths (1s, 10s and 120s)  \cite{dunbar2017zero}.
+% {\color{blue}
+Evaluation on ZeroSpeech 2017 aims  to better compare our approach with previous research in this area.
+% } 
+% We use the
+% Here, 
+English evaluation data from ZeroSpeech 2017 are used to evaluate the effectiveness of BNFs learned by the the back-end. These data are organized into subsets of differing   lengths (1s, 10s \& 120s)  \cite{dunbar2017zero}.
 % ZeroSpeech 2017 database is   used in our experiments only for   performance evaluation purpose, 
 % {\color{blue}
-The three sets are used to evaluate the effectiveness of BNFs learned by the the back-end.
+%They are used to evaluate the effectiveness of BNFs learned by the the back-end.
 % } 
 % English test data in ZeroSpeech 2017 is adopted, as our system regards English as the target language. 
 % contains three languages, English, French and Mandarin. In our experiments, ZeroSpeech training data is not used, and 
@@ -430,15 +441,25 @@ on whether X and A belong to the same speaker.
 The APC model is implemented as a  multi-layer  LSTM network. Residual connections are made between two consecutive layers.  
 Each LSTM layer has $100$ dimensions.
 Unless specified explicitly, the number of LSTM layers is $3$.
-The prediction step $n$ (in Section \ref{subsec:apc}) is set to  the optimal value within $\{1,2,3,4,5\}$. Our preliminary experiments showed that $n$ larger than $5$ would lead to rapid degradation in ABX error rate. 
-The input features to APC are $13$-dimensional MFCCs with cepstral mean normalization (CMN) at speaker level. 
+% {\color{blue}
+For each training data amount setting,
+% } 
+the
+% The 
+prediction step $n$ (in Section \ref{subsec:apc}) is
+picked from $\{1,2,3,4,5\}$ which gives the best ABX performance.
+% set to  the optimal value within $\{1,2,3,4,5\}$.
+% , {\color{blue}one  for each training data amount setting.}
+% different amounts of training material.} 
+Our preliminary experiments showed that increasing $n$ to larger than $5$ would lead to rapid degradation in ABX error rate. 
+The input features to APC are $13$-dimension MFCCs with cepstral mean normalization (CMN) at speaker level. 
 The model is trained with the open-source tool by \cite{Chung2019} for $100$ epochs with the Adam optimizer \cite{kingma2014adam}, an initial learning rate of $10^{-4}$, and a batch size of $32$. 
 %An open-source tool by \cite{Chung2019} is used to train the APC model. 
 % MFCC features are extracted by Kaldi \cite{povey2011kaldi}. 
 After training, the top LSTM layer's output is extracted as the APC feature representation.
 
 % \color{blue}
-The performance of front-end  APC pretraining will be compared against FHVAE \cite{hsu2017nips}, which was used in related previous work \cite{Feng2019improving}. 
+The performance of front-end  APC pretraining is compared against FHVAE \cite{hsu2017nips}, which was used in related previous work \cite{Feng2019improving}. 
 % As the reference model to compare the APC against, we use FHVAE \cite{hsu2017nips}.
 % FHVAE was previously adopted \cite{Feng2019improving} as the front-end to address the same problem as in this study. 
 The latent representation $\bm{z_1}$ of FHVAE is known to be preserving linguistic content while suppressing speaker variation \cite{hsu2017nips}, and is compared with the APC feature representation. The model architecture of FHVAE and its training procedure follow those in \cite{Feng2019improving}.
@@ -449,24 +470,29 @@ using an open-source tool \cite{hsu2017nips}, and take the same input features a
 \subsection{Back-end}
 \subsubsection{OOD ASR systems}
 \label{subsubsec:oodasr}
-We trained two OOD ASR systems, i.e., a Dutch ASR and a Mandarin ASR. The Dutch ASR is trained with CGN \cite{oostdijk2000spoken}, while the Mandarin ASR is trained with Aidatatang\_200zh.
+We trained two OOD ASR systems, i.e., a Dutch ASR and a Mandarin ASR.
+% The Dutch ASR is trained with CGN \cite{oostdijk2000spoken}, while the Mandarin ASR is trained with Aidatatang\_200zh.
 % , a transcribed speech corpus covering  speaking styles including conversations, read speech, broadcast news (BN), etc.
 % % Speech spoken by people in the Netherlands are used. 
 % The training and test data partition follows \cite{laurensw75cgn_kaldi}. The training data comprises $483$
 % hours of speech. 
-The OOD ASR systems use a chain-time delay NN (TDNN) AM \cite{povey2016purely} trained using Kaldi \cite{povey2011kaldi}, containing $7$ TDNN layers.  The TDNN   is trained based on the lattice-free maximum mutual information (LF-MMI) criterion \cite{povey2016purely}.
-
-For Dutch, the input features consist of $40$-dimension high-resolution (HR) MFCCs. For Mandarin, the input  features consist of HR MFCC features  appended by $3$-dimension pitch features \cite{ghahremani2014pitch}. 
+The OOD ASR systems use a chain-time delay NN (TDNN) AM \cite{povey2016purely} trained using Kaldi \cite{povey2011kaldi}, containing $7$   layers.  The TDNN   is trained based on the lattice-free maximum mutual information (LF-MMI) criterion \cite{povey2016purely}.
+For Dutch, the input features consist of $40$-dimension high-resolution (HR) MFCCs. For Mandarin, the input  features consist of HR MFCCs  appended by 
+% $3$-dimension 
+pitch features \cite{ghahremani2014pitch}. 
 %  Training data are speed perturbed with scales $0.9, 1.0$ and $1.1$, making the actual  amount of training data tripled. 
-Frame labels required for TDNN training are generated by forced-alignment with a GMM-HMM AM trained beforehand. The number of modeled Dutch phones is $81$ (including a silence phone).
- The number of modeled Mandarin phones is $119$ (including a silence phone). For both systems, a tri-gram LM is trained using training data transcriptions.
+Frame labels required for TDNN training are obtained by forced-alignment with a GMM-HMM AM trained beforehand. 
+% The number of modeled Dutch phones is $81$ (including a silence phone).  The number of modeled Mandarin phones is $119$ (including a silence phone). 
+ For both systems, a tri-gram LM is trained using training data transcriptions.
 
 The Dutch ASR obtained a word error rate (WER) of $8.98\%$ on the CGN broadcast test set. 
 % {\color{blue}
 (This   WER could be improved upon by integrating an   RNN LM. However, as Dutch ASR performance is not the focus of this study, an RNN LM is not applied.)
 % } 
 The Mandarin ASR obtained a character error rate (CER) of $6.37\%$ on the Aidatatang\_200zh test set.
-{\color{blue} The two ASR systems are used to generate cross-lingual phone labels.}% for subsequent DNN-BNF model training.}
+% {\color{blue} 
+The two ASR systems are used to generate cross-lingual phone labels for Libri-light training speech frames.
+% }% for subsequent DNN-BNF model training.}
 
 % , a read speech corpus developed by \cite{aidatatang}. The training set comprises $140$ hours of speech. 
 % A chain-TDNN AM is trained. 
@@ -483,23 +509,24 @@ The Mandarin ASR obtained a character error rate (CER) of $6.37\%$ on the Aidata
 
 \subsubsection{DNN-BNF setup}
 % \subsection{DNN-BNF setup}
-Two DNN-BNF models are trained, one taking the Dutch cross-lingual phone labels as training labels and one taking the Mandarin  phone labels as training labels. Both models are trained on the Libri-light (English) acoustic training data. 
+Two DNN-BNF models are trained, one taking the Dutch cross-lingual phone labels as training labels and one taking the Mandarin  phone labels as training labels. % Both models are trained on the Libri-light (English) acoustic training data. 
 % The cross-lingual phone labels are obtained from the Dutch or Mandarin OOD ASR system. 
 %One DNN-BNF model is trained with phone labels generated by the Dutch ASR, while the other DNN-BNF is trained with labels generated by the Mandarin ASR. To obtain Dutch or Mandarin frame labels,  HR MFCC features (and appended by pitch features if to obtain Mandarin labels) of Libri-light are extracted, and fed as input features to the Dutch/Mandarin ASR system for decoding. 
 % In order to generate cross-lingual phone labels, the Dutch or Mandarin ASR system is utilized to decode Libri-light training data.
-Cross-lingual phone labels are generated via decoding Libri-light training data using the Dutch or Mandarin ASR.
+% Cross-lingual phone labels are generated via decoding Libri-light training data using the Dutch or Mandarin ASR.
 % During decoding, the LM to AM weight ratio is set to $0.001$.
 % The decoding results, i.e. word transcriptions,  are  forced-aligned by the Dutch/Mandarin AM to generate HMM state alignments.
 % \footnote{Here \textit{alignment} is different from the `norm'. It contains alternative pronunciations. This is required by Kaldi chain model training.}
 % by chain model training of DNN-BNF in Kaldi.} 
 % as frame labels.
 
-The DNN-BNF consists of $7$ feed-forward layers with ReLU activation. Each layer has $450$ dimensions except a $40$-dimension bottleneck layer, which is located at the penultimate layer of the DNN-BNF model. 
+The DNN-BNF consists of $7$ feed-forward layers (FFLs). Each layer has $450$ dimensions except a $40$-dimension bottleneck layer, which is located below the top FFL. 
 % second top. 
-The DNN-BNF is implemented  as a chain model in Kaldi and trained with the   LF-MMI criterion. 
-The inputs to DNN-BNF are the APC  features with contextual splicing $\{0, \pm 1, \pm 2, \pm 3\}$.
+The DNN-BNF uses a chain model which is trained based on  the   LF-MMI criterion. 
+The inputs to DNN-BNF are the APC  feature with its neighboring ($-3$ to $+3$) frames. 
+% contextual splicing $\{0, \pm 1, \pm 2, \pm 3\}$.
 % Training labels are either Dutch  or Mandarin frame labels. 
-After DNN-BNF training, $40$-dimensional BNFs are extracted as the learned subword-discriminative representation and evaluated with the ABX task.
+After DNN-BNF training, $40$-dimension  BNFs are extracted as the learned subword-discriminative representation and evaluated with the ABX task.
 % of target speech. 
 
 % and phonetic-alignments in Dutch/Mandarin. 
@@ -508,36 +535,36 @@ After DNN-BNF training, $40$-dimensional BNFs are extracted as the learned subwo
 
 
 
-For the purpose of performance comparison, the DNN-BNF model is also trained using conventional spectral features as input features. 
-% {\color{blue}It is also implemented in our experiments.} 
-In this case, the %only difference during training is that
-% DNN-BNF training keeps the same as mentioned above, except that 
-input features before contextual splicing are $40$-dimensional HR MFCCs. All the remaining experimental settings   are kept unchanged.
+For the purpose of   comparison, two more DNN-BNF models are  trained using the $40$-dimension HR MFCC with its neighboring ($-3$ to $+3$) frames as input features. One model takes the Dutch labels  and the other takes the Mandarin labels.
+% conventional spectral features as input features. 
+% % {\color{blue}It is also implemented in our experiments.} 
+% In this case, the %only difference during training is that
+% % DNN-BNF training keeps the same as mentioned above, except that 
+% input features before contextual splicing are $40$-dimensional HR MFCCs. 
+Other  training and model settings   are unchanged.
 % with the same contextual splicing. 
-After DNN-BNF training, the resulting BNFs are also evaluated with the ABX task.
+After  training, BNFs are extracted and also evaluated with the ABX task.
 % BNF representation is   extracted.
 % as a reference.
 % including cross-lingual phone labeling, and DNN-BNF training.
 
-\section{Results and Discussion}
+\section{Results and discussion}
 \subsection{Effectiveness of APC features }
 \label{subsec:results_apc}
 % {\color{blue}
 
 % }
-In this subsection, APC  features and FHVAE features ($\bm{z_1}$)  are directly evaluated by the ABX task in the front-end, without being modeled by the  DNN-BNF back-end. %The performance comparison is made at front-end.
-ABX error rates ($\%$) of the APC  features  and the FHVAE features with respect to different hours of training data  are shown in Figure \ref{fig:apc_fhvae_mfcc}.
-
+In this subsection, the APC  features and FHVAE features in the front-end ($\bm{z_1}$)  are directly evaluated using the ABX task, without being modeled by the  DNN-BNF back-end. %The performance comparison is made at front-end.
+ABX error rates ($\%$) of the APC     and   FHVAE features with respect to different hours of training data  are shown in Figure \ref{fig:apc_fhvae_mfcc}.
 \begin{figure}[!t]
     \centering
     \includegraphics[width=1\linewidth]{LaTeX/apc_fhvae_mfcc_no_sub_hori_no_hrs.png}
-    \caption{ABX error rates  of features learned by APC, FHVAE and official MFCC baseline on Libri-light (Avg. over $4$ sets). }
+    \caption{ABX error rates  of APC features, FHVAE features and official MFCC baseline on Libri-light (Avg. over $4$ sets). }
     \label{fig:apc_fhvae_mfcc}
 \end{figure}
 % these two features are learned without performing DNN-BNF modeling. 
-
-ABX results in  Figure \ref{fig:apc_fhvae_mfcc} are averaged values over the $4$ evaluation sets in Libri-light. The official MFCC baseline   \cite{kahn2019librilight} is also shown in this figure. It can be observed that both the APC features and FHVAE features  outperform MFCC features. The APC features are consistently superior to FHVAE features in both across- and within-speaker conditions irrespective of the amount of training data.
-Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that the APC features are more robust to speaker variation than FHVAE features, even though the APC model is not explicitly suppressing speaker variation as FHVAE is.
+ABX results in this figure are averaged values over the $4$ evaluation sets in Libri-light. The official MFCC baseline   \cite{kahn2019librilight} is also shown in this figure. It can be observed that both the APC features and the FHVAE features  outperform the MFCC features. The APC features are consistently superior to the FHVAE features in both the across- and the within-speaker conditions irrespective of the amount of training data.
+Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that the APC features are more robust to speaker variation than the FHVAE features, even though the APC model is not explicitly suppressing speaker variation as FHVAE is.
 % , even though the
 % % ($13 \sim 526$ hours, i.e. sub0.9K to unlab-600). 
 % APC model is not explicitly suppressing speaker variation as FHVAE is.  
@@ -546,11 +573,12 @@ Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that the APC features are more 
 % (-) a curve showing ABX error rate of APC features, FHVAE latent segment variables and MFCC features w.r.t training data amount.
 
 \subsection{Effectiveness of BNF representation}
+\label{subsec:results_bnf_librilight}
 \begin{table}[!t]
-\renewcommand\arraystretch{0.80}
+\renewcommand\arraystretch{0.70}
 \centering
-\caption{ABX error rates of  BNFs, APC and CPC features  on Libri-light.  `Du' and `Ma' stand for Dutch and Mandarin. APC encoder has $5$ layers.}
-\resizebox{0.95 \linewidth}{!}{%
+\caption{ABX error rates of  BNFs, APC and CPC    on Libri-light.  Models are trained with unlab-600. APC   has $5$ layers, as this gives the best performance among different nos. of APC layers.}
+\resizebox{1 \linewidth}{!}{%
 \begin{tabular}{l|cc|cccc|c}      
 % \hline      
 \toprule
@@ -589,11 +617,11 @@ CPC \cite{kahn2019librilight}&\multicolumn{2}{c|}{-} &$7.36$&	$9.39$&	$6.90$&	$9
 }
 \label{tab:dnn_bnf}
 \end{table}
-In this subsection, all the experiments are trained with unlab-600 ($526$ hours).
-ABX error rates (\%) of BNFs  are listed in Table \ref{tab:dnn_bnf}. The second and third columns  denote input feature types and frame labels for training DNN-BNF models.
-The performance  of    APC (in Section \ref{subsec:results_apc}) and a CPC approach \cite{kahn2019librilight}  are also listed for reference.
+In this subsection, all models are trained with unlab-600 ($526$ hours).
+ABX error rates (\%) of BNFs extracted by the back-end DNN-BNF model are listed in Table \ref{tab:dnn_bnf}. The second and third columns  denote input feature types and frame labels for training DNN-BNF models. `Du' and `Ma' stand for Dutch and Mandarin. 
+Two front-end features, i.e. APC and CPC (in \cite{kahn2019librilight}),  are also listed as references.
 % {\color{blue}
-APC and CPC are   not modeled by the DNN-BNF back-end.
+% APC and CPC are   not modeled by the DNN-BNF back-end.
 % Note that the APC model in Table \ref{tab:dnn_bnf} consists of $5$ LSTM layers instead of $3$. 
    From this table, it is observed  that:
 
@@ -606,12 +634,18 @@ APC and CPC are   not modeled by the DNN-BNF back-end.
 % The results show that 
 back-end DNN-BNF modeling with cross-lingual phone labels
 % leveraging OOD language resources 
-outperforms front-end  pretrained features for unsupervised subword modeling, similar to what has been observed by \cite{shibata2017composite,feng2019_TASLP}. BNF also performs better than the   CPC feature    \cite{kahn2019librilight}. Note that CPC does not require OOD resources during training.
+outperforms front-end  pretrained features for unsupervised subword modeling, similar to what has been observed by \cite{shibata2017composite,feng2019_TASLP}. BNF also performs better than the   CPC feature    \cite{kahn2019librilight}. Note that CPC does not require OOD resources during training while BNF in this study does.
 
 (3) The performance achieved by adopting Dutch labels in DNN-BNF model training is slightly better than that by adopting Mandarin labels. 
 % ($9.33\%/6.17\%$). 
 This can possibly be explained by the similarity between the OOD language and target in-domain language, i.e., Dutch and English, respectively, which are both West Germanic languages, while Mandarin is not. 
-Although one could possibly attribute the superiority of adopting Dutch labels over Mandarin labels to the larger amount of training data for Dutch ($483$ hours) than for Mandarin ($140$ hours), this is not a likely explanation because both models achieved fairly similar evaluation results on their respective in-domain test sets (see Section \ref{subsubsec:oodasr}).
+Although one could 
+possibly 
+attribute the superiority of adopting Dutch labels over Mandarin labels to the larger amount of training data for Dutch ($483$ hours) than for Mandarin ($140$ hours), this is not a likely explanation because both models achieved fairly similar 
+% evaluation 
+results 
+% performance
+on their respective in-domain test sets (in Section \ref{subsubsec:oodasr}).
 
 % One may attribute the superiority of adopting Dutch labels over Mandarin ones to the larger amount of training data for the Dutch ASR ($483$ hours)  than that for the Mandarin ASR ($140$ hours).  
 % % While the Dutch ASR  is trained with more data ($483$ hours) than the Mandarin ASR ($140$ hours), .
@@ -642,12 +676,12 @@ Although one could possibly attribute the superiority of adopting Dutch labels o
 \subsection{Effect of amount of training data}
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=\linewidth]{LaTeX/crsling_dnn_bnf_apc_input_vert_no_prefix_adt_apc_across_9.36_hori_no_hrs.png}
+    \includegraphics[width=0.9\linewidth]{LaTeX/crsling_dnn_bnf_apc_input_vert_no_prefix_adt_apc_across_9.36_hori_no_hrs.png}
     \caption{ABX error rates of BNFs w.r.t amount of training data on Libri-light (Avg. over $4$ sets).}
     \label{fig:dnn_bnf_data_amount}
 \end{figure}
 
-ABX error rates ($\%$) of BNFs extracted by  DNN-BNF models with respect to different amounts of training data in hours are illustrated in Figure \ref{fig:dnn_bnf_data_amount}. The results are averaged values over the $4$ evaluation sets in  Libri-light. The unlab-6K set ($5,273$ hours)  is only adopted in training DNN-BNF models with MFCC inputs (marked as `$\ast$'). For models trained with APC features as input features (marked as `$\diamond$'), the training set for DNN-BNF modeling and for APC pretraining is always the same. From Figure \ref{fig:dnn_bnf_data_amount}, it can clearly be seen that 
+ABX error rates ($\%$) of BNFs extracted by  DNN-BNF models with respect to different amounts of training data in hours are illustrated in Figure \ref{fig:dnn_bnf_data_amount}. The results are averaged values over the $4$ evaluation sets in  Libri-light. Unlab-6K ($5,273$ hours)  is only adopted in training DNN-BNF models with MFCC input features (marked as ``$\ast$''). For models trained with APC features as input features (``$\diamond$''), the  data amount for APC pretraining and DNN-BNF model training   is the same for each run.  From Figure \ref{fig:dnn_bnf_data_amount}, it can clearly be seen that 
 % increasing the amount of training data leads to better ABX performance. 
 % When training data increases from $13$ hours to $52$ hours, 
 performance improves as more training data is available, with the largest improvement when the training data increases from $13$  hours  to $52$ hours, and less improvement for any additional training material.
@@ -678,42 +712,73 @@ Interestingly, for Dutch, the model that uses APC features and is trained with $
 
 % \section{Discussion}
 \subsection{ZeroSpeech 2017 results}
+
+% \begin{table}[!t]
+% \renewcommand\arraystretch{0.50}
+% \centering
+% \caption{ABX error rates of  BNFs  on ZeroSpeech 2017 English sets. Models are trained with  Libri-light using Dutch labels.}
+% \resizebox{1 \linewidth}{!}{%
+% \begin{tabular}{cc|ccc|c|ccc|c}      
+% % \hline      
+% \toprule
+% \midrule[0.2pt]
+% & &\multicolumn{4}{c|}{Across-speaker}& \multicolumn{4}{c}{Within-speaker}\\
+% System &   Train hrs & 1s & 10s & 120s & Avg. &1s &10s &120s &Avg.\\
+% \midrule[0.2pt]
+
+% \multirow{ 3}{*}{Proposed} & $526$  & $7.65$&$6.69$&$6.66$&$\bm{7.00}$&$5.52$&$4.77$&$4.68$&$\bm{4.99}$\\
+% & $209$ & $8.11$&$6.99$&$6.90$&$7.33$&$5.83$&$5.06$&$4.97$&$5.29$\\
+% & $104$ & $8.14$&$7.07$&$7.03$&$7.41$&$5.89$&$4.99$&$5.00$&$5.29$ \\
+% \midrule[0.2pt]
+% Topline \cite{dunbar2017zero}&  &$8.6$&$6.9$&$6.7$&$7.40$ &$6.5$&$5.3$&$5.1 $&$5.63$\\
+%   \cite{shibata2017composite}& & $7.9$&$7.4$&$6.9$&$7.40$&$5.5$&$5.2$&$4.9$&$5.20$\\
+% \midrule[0.2pt]
+% \bottomrule
+% \end{tabular}%
+% }
+% \label{tab:zrsc2017}
+% \end{table}
+
 \begin{table}[!t]
-\renewcommand\arraystretch{0.80}
+\renewcommand\arraystretch{0.70}
 \centering
-\caption{ABX error rates of  BNFs  on ZeroSpeech 2017 English sets. Models are trained with  Libri-light using Dutch labels.}
+\caption{ABX error rates of  BNFs  on ZeroSpeech 2017 English evaluation sets. Models are trained with  Libri-light.}
 \resizebox{1 \linewidth}{!}{%
 \begin{tabular}{cc|ccc|c|ccc|c}      
 % \hline      
 \toprule
 \midrule[0.2pt]
 & &\multicolumn{4}{c|}{Across-speaker}& \multicolumn{4}{c}{Within-speaker}\\
-System &   Train hrs & 1s & 10s & 120s & Avg. &1s &10s &120s &Avg.\\
+System &   Hours &  1s & 10s & 120s & Avg. &1s &10s &120s &Avg.\\
 \midrule[0.2pt]
 
-\multirow{ 3}{*}{Proposed} & $526$  & $7.65$&$6.69$&$6.66$&$\bm{7.00}$&$5.52$&$4.77$&$4.68$&$\bm{4.99}$\\
-& $209$ & $8.11$&$6.99$&$6.90$&$7.33$&$5.83$&$5.06$&$4.97$&$5.29$\\
-& $104$ & $8.14$&$7.07$&$7.03$&$7.41$&$5.89$&$4.99$&$5.00$&$5.29$ \\
+\multirow{ 3}{*}{Proposed-Du} & $526$  &  $7.65$&$6.69$&$6.66$&$\bm{7.00}$&$5.52$&$4.77$&$4.68$&$\bm{4.99}$\\
+& $209$&  $8.11$&$6.99$&$6.90$&$7.33$&$5.83$&$5.06$&$4.97$&$5.29$\\
+& $104$&  $8.14$&$7.07$&$7.03$&$7.41$&$5.89$&$4.99$&$5.00$&$5.29$ \\
+\midrule
+\multirow{ 3}{*}{Proposed-Ma} 
+& $526$  &  $8.19$&$7.33$&$7.30$&$7.61$&$5.97$&$5.39$&$5.37$&$5.58$ \\
+& $209$& $8.62$&$7.61$&$7.52$&$7.92$&$6.31$&$5.52$&$5.60$&$5.81$\\
+& $104$&   $8.47$&$7.62$&$7.52$&$7.87$&$6.13$&$5.49$&$5.44$&$5.69$\\
 \midrule[0.2pt]
 Topline \cite{dunbar2017zero}&  &$8.6$&$6.9$&$6.7$&$7.40$ &$6.5$&$5.3$&$5.1 $&$5.63$\\
   \cite{shibata2017composite}& & $7.9$&$7.4$&$6.9$&$7.40$&$5.5$&$5.2$&$4.9$&$5.20$\\
-% \midrule
-% \midrule
-% \multicolumn{5}{c}{Within-speaker} \\
-% \midrule[0.2pt]
-%  unlab-600  & \\
-%  sub14.4K & \\
-% \ Topline \cite{dunbar2017zero}   &$6.5$&$5.3$&$5.1 $&$5.63$\\
-% &dev-clean & dev-other & test-clean & test-other  \\
 \midrule[0.2pt]
 \bottomrule
 \end{tabular}%
-
 }
 \label{tab:zrsc2017}
 \end{table}
-We also evaluated the performance of our approach on the ZeroSpeech 2017 English evaluation sets. The results are shown in Table \ref{tab:zrsc2017}, which also includes the official topline \cite{dunbar2017zero}  and the best-performing system (using OOD data) \cite{shibata2017composite}. Note that, unlike our approach, these two systems employed English labeled data. The total amount of labeled training data used in \cite{shibata2017composite} is $1,327$ hours (including $80$-hour English data).
-Interestingly, our system trained with $526$ hours of data  outperforms the topline and \cite{shibata2017composite} systems, and is comparable to the two reference systems when trained with only $104$ hours of data.
+We also evaluated the performance of  our approach 
+% by adopting Dutch (-Du) and Mandarin (-Ma) labels
+% adopting Dutch labels
+% \footnote{{\color{blue}Performance with Mandarin labels is not reported due to page limit.}} 
+on the ZeroSpeech 2017 English evaluation sets. The results are shown in Table \ref{tab:zrsc2017}, which also includes the official topline \cite{dunbar2017zero}  and the best-performing system (using OOD data) \cite{shibata2017composite}. 
+Note that, unlike our approach, these two systems employed English labeled data. 
+The total amount of labeled training data used in \cite{shibata2017composite} is $1,327$ hours (including $80$-hour English data).
+In this table, ``Proposed-Du/-Ma'' denotes our proposed approach by adopting Dutch or Mandarin labels  respectively.
+Interestingly, using Dutch labels, our system trained with $526$ hours of data outperforms the topline and \cite{shibata2017composite} systems, and is comparable to the two reference systems when trained with only $104$ hours of data. Table \ref{tab:zrsc2017} also shows the proposed approach by adopting Dutch labels performs better than that by adopting Mandarin labels,  which is consistent with observations in Section \ref{subsec:results_bnf_librilight}.
+
 % The system \cite{shibata2017composite} is best-performing.
 
 % report our results and 
@@ -724,8 +789,11 @@ Interestingly, our system trained with $526$ hours of data  outperforms the topl
 
 \section{Conclusions}
 This study addresses unsupervised subword modeling, and proposes a two-stage system that consists of APC pretraining and cross-lingual phone-aware DNN-BNF modeling.  
-Experiments are carried out on Libri-light and ZeroSpeech 2017 databases and evaluated by the ABX task. Experimental results confirm the effectiveness of APC in front-end feature pretraining. It surpasses a previously adopted FHVAE approach. Our whole system outperforms the state of the art on both databases. The proposed approach benefits from increasing training data amount, and is less sensitive to data amount when the training data is over $50$ hours. 
-{\color{blue}When using APC pretraining, $4\%$ of the training material could result in a similar  or slightly better  performance than   using the full training set without  APC pretraining.}
+% Experiments are carried out on Libri-light and ZeroSpeech 2017 databases and evaluated by the ABX task. 
+Experimental results on Libri-light and ZeroSpeech 2017 databases demonstrate the effectiveness of APC in front-end feature pretraining. It surpasses a previously adopted FHVAE approach. Our whole system outperforms the state of the art on both databases. The proposed approach benefits from increasing training data amount, and is less sensitive to data amount when the training data is over $50$ hours. 
+% {\color{blue}
+When using APC pretraining, $4\%$ of the training material could result in a similar   performance to   using the full training set without  APC pretraining.
+% }
 % APC pretraining could save the amount of training data from over $5,000$ hours to around $200$ hours for the proposed system with little performance degradation in across-speaker ABX error rate.  
 Cross-lingual phone labeling for English data by a Dutch ASR is slightly better than by a Mandarin ASR. This is possibly linked to the larger similarity of Dutch than Mandarin with  English.  
 
