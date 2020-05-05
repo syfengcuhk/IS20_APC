@@ -30,15 +30,21 @@
 \maketitle
 % 
 \begin{abstract}
-This study addresses unsupervised subword modeling, i.e., learning of 
-feature representations that can distinguish subword units of a language. 
-The proposed approach adopts a two-stage bottleneck feature (BNF) learning framework, which consists of 
-autoregressive predictive coding (APC) as a front-end  and a cross-lingual phone-aware DNN-BNF model as a back-end. 
-APC pretrained features are set as input features to a DNN-BNF model. An out-of-domain (OOD) language-mismatched ASR system is used to provide cross-lingual phone labels for DNN-BNF model training. Finally, BNFs are extracted as the subword-discriminative feature representation. A second aim of this work is to investigate the robustness of the proposed approach's effectiveness to different amounts of training data. The results on Libri-light and ZeroSpeech 2017 databases show that APC is effective in front-end feature pretraining.
+This study addresses unsupervised subword modeling, i.e., learning feature representations that can distinguish subword units of a language. 
+The proposed approach adopts a two-stage bottleneck feature (BNF) learning framework, consisting of 
+autoregressive predictive coding (APC) as a front-end  and a 
+% cross-lingual phone-aware 
+DNN-BNF model as a back-end. 
+APC pretrained features are set as input features to a DNN-BNF model. A  language-mismatched ASR system is used to provide cross-lingual phone labels for DNN-BNF model training. Finally, BNFs are extracted as the subword-discriminative feature representation. A second aim of this work is to investigate the robustness of 
+% the proposed 
+our
+approach's effectiveness to different training data amounts. The results on Libri-light and ZeroSpeech 2017 databases show that APC is effective in front-end feature pretraining.
 Our whole system outperforms the state of the art on both databases.
-% Cross-lingual phone labels for  English data by a Dutch ASR are better than by a Mandarin ASR, possibly linked to the larger similarity of Dutch and English.
-Moreover, the proposed system is less sensitive to training data amount  when the training data is over 50 hours.  
-Concluding, APC pretraining leads to a reduction of needed training material from over 5000 hours to around 200 hours with little performance degradation.
+Cross-lingual phone labels for  English data by a Dutch ASR are better than by a Mandarin ASR, possibly linked to the larger similarity of Dutch than Mandarin with English.
+% Moreover, 
+Our system is less sensitive to training data amount  when the training data is over 50 hours.  
+% Concluding, 
+APC pretraining leads to a reduction of needed training material from over 5,000 hours to around 200 hours with little performance degradation.
 
 
 \end{abstract}
@@ -90,7 +96,7 @@ In \cite{Feng2019improving},
  to generate pseudo-phone labels for the speech frames.
 %  ,
 %  }
-In another recent study  \cite{chorowski2019unsupervised}, the vector quantized VAE (VQ-VAE) \cite{oord2017neural} was applied to directly learn the desired feature representation without a back-end model such as the DNN-BNF, and is comparable to state-of-the art performance \cite{heck2017feature}. 
+In another recent study  \cite{chorowski2019unsupervised}, the vector quantized VAE (VQ-VAE) \cite{oord2017neural} was applied to directly learn the desired feature representation without a back-end model such as the DNN-BNF, and is comparable to state-of-the-art performance \cite{heck2017feature}. 
 % {\color{blue}
 % In \cite{riviere2020unsupervised}, contrastive predictive coding (CPC) was applied \cite{oord2018cpc}. 
 %The performance of \cite{chorowski2019unsupervised} is comparable to state of the art \cite{heck2017feature}.
@@ -790,12 +796,13 @@ Interestingly, using Dutch labels, our system trained with $526$ hours of data o
 \section{Conclusions}
 This study addresses unsupervised subword modeling, and proposes a two-stage system that consists of APC pretraining and cross-lingual phone-aware DNN-BNF modeling.  
 % Experiments are carried out on Libri-light and ZeroSpeech 2017 databases and evaluated by the ABX task. 
-Experimental results on Libri-light and ZeroSpeech 2017 databases demonstrate the effectiveness of APC in front-end feature pretraining. It surpasses a previously adopted FHVAE approach. Our whole system outperforms the state of the art on both databases. The proposed approach benefits from increasing training data amount, and is less sensitive to data amount when the training data is over $50$ hours. 
+Experimental results on Libri-light and ZeroSpeech 2017 databases demonstrate the effectiveness of APC in front-end feature pretraining. It surpasses a previously adopted FHVAE approach. Our whole system outperforms the state of the art on both databases. 
+Cross-lingual phone labeling for English data by a Dutch ASR is slightly better than by a Mandarin ASR. This is possibly linked to the larger similarity of Dutch than Mandarin with  English.  
+The proposed approach benefits from increasing training data amount, and is less sensitive to data amount when the training data is over $50$ hours. 
 % {\color{blue}
 When using APC pretraining, $4\%$ of the training material could result in a similar   performance to   using the full training set without  APC pretraining.
 % }
 % APC pretraining could save the amount of training data from over $5,000$ hours to around $200$ hours for the proposed system with little performance degradation in across-speaker ABX error rate.  
-Cross-lingual phone labeling for English data by a Dutch ASR is slightly better than by a Mandarin ASR. This is possibly linked to the larger similarity of Dutch than Mandarin with  English.  
 
 % \section{Acknowledgements}
 
