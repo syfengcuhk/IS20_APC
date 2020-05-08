@@ -32,18 +32,11 @@
 \begin{abstract}
 This study addresses unsupervised subword modeling, i.e., learning feature representations that can distinguish subword units of a language. 
 The proposed approach adopts a two-stage bottleneck feature (BNF) learning framework, consisting of 
-autoregressive predictive coding (APC) as a front-end  and a 
-% cross-lingual phone-aware 
-DNN-BNF model as a back-end. 
-APC pretrained features are set as input features to a DNN-BNF model. A  language-mismatched ASR system is used to provide cross-lingual phone labels for DNN-BNF model training. Finally, BNFs are extracted as the subword-discriminative feature representation. A second aim of this work is to investigate the robustness of 
-% the proposed 
-our
-approach's effectiveness to different training data amounts. The results on Libri-light and ZeroSpeech 2017 databases show that APC is effective in front-end feature pretraining.
+autoregressive predictive coding (APC) as a front-end  and a DNN-BNF model as a back-end. 
+APC pretrained features are set as input features to a DNN-BNF model. A  language-mismatched ASR system is used to provide cross-lingual phone labels for DNN-BNF model training. Finally, BNFs are extracted as the subword-discriminative feature representation. A second aim of this work is to investigate the robustness of our approach's effectiveness to different amounts of training data. The results on Libri-light and the ZeroSpeech 2017 databases show that APC is effective in front-end feature pretraining.
 Our whole system outperforms the state of the art on both databases.
-Cross-lingual phone labels for  English data by a Dutch ASR are better than by a Mandarin ASR, possibly linked to the larger similarity of Dutch than Mandarin with English.
-% Moreover, 
+Cross-lingual phone labels for  English data by a Dutch ASR outperform those by a Mandarin ASR, possibly linked to the larger similarity of Dutch compared to Mandarin with English.
 Our system is less sensitive to training data amount  when the training data is over 50 hours.  
-% Concluding, 
 APC pretraining leads to a reduction of needed training material from over 5,000 hours to around 200 hours with little performance degradation.
 
 
@@ -694,7 +687,13 @@ performance improves as more training data is available, with the largest improv
 %compared to   that from $52$ hours to over $500$ hours. 
 
 Secondly, across the different data amounts, the DNN-BNF models trained with APC features as input features are almost consistently better than those with MFCC input features. 
-Interestingly, for Dutch, the model that uses APC features and is trained with $209$ hours of data achieves similar across-speaker error rates ($8.78\%$) to the model trained with MFCCs with $5,273$ hours of data ($8.70\%$). This implies that APC pretraining ``saves'' around $5,000$ hours (i.e.  $96\%$) of training data, making APC pretraining highly appealing in low-resource speech modeling. The effect of pretraining on the needed amount of training data is even larger when Mandarin labels are used for DNN-BNF modeling (saving over $99\%$ of the training data).
+Interestingly, 
+% for Dutch, 
+with Dutch labels,
+the model that uses APC features and is trained with $209$ hours of data achieves a similar across-speaker error rate ($8.78\%$) to the model trained with MFCCs with $5,273$ hours of data ($8.70\%$). This implies that APC pretraining ``saves'' around $5,000$ hours (i.e.  $96\%$) of training data, making APC pretraining highly appealing in low-resource speech modeling. The effect of pretraining on the needed amount of training data is even larger when Mandarin labels are used 
+% for DNN-BNF modeling 
+% as training labels
+(saving over $99\%$ of the training data).
 % $10.02\%$ across-speaker error rate is achieved using APC features and trained with $52$ hours of data, comparing to $10.23\%$ error rate achieved using MFCC features and trained with $5,273$ hours of data. 
 %, APC pretraining  could save even more training data amount without ABX error rate degradation. 
 % In real-world applications, it is sometimes impractical to gain knowledge on language similarity between the target unknown language and resource-rich languages. 
