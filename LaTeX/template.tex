@@ -12,9 +12,9 @@
 \usepackage{footnote}
 \makesavenoteenv{tabular}
 \newcommand{\quotes}[1]{``#1''}
-\setlength{\intextsep}{2pt plus 0pt minus 3pt} %distance between floats on the top or the bottom and the text
-\setlength{\textfloatsep}{2pt plus 0pt minus 4pt}%distance between two floats
-\setlength{\floatsep}{2pt plus 0pt minus 2pt}%distance
+\setlength{\intextsep}{1pt plus 0pt minus 3pt} %distance between floats on the top or the bottom and the text
+\setlength{\textfloatsep}{1pt plus 0pt minus 4pt}%distance between two floats
+\setlength{\floatsep}{1pt plus 0pt minus 2pt}%distance
 \usepackage{soul}
 \title{Unsupervised Subword Modeling Using Autoregressive Pretraining and Cross-Lingual Phone-Aware Modeling}
 \name{Siyuan Feng, Odette Scharenborg}
@@ -211,7 +211,7 @@ of the proposed approach's effectiveness to different amounts of training data. 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{LaTeX/apc_framework_detail_other_lang.pdf}
+    \includegraphics[width=0.95\linewidth]{LaTeX/apc_framework_detail_other_lang.pdf}
     \caption{General framework of the proposed approach to unsupervised subword modeling.  }
     \label{fig:general_framework}
 \end{figure}
@@ -352,10 +352,10 @@ Unlab-6K  set consists of $5,273$ hours of
 % non-silent 
 speech excluding silence.  Details of the training sets are listed in Table \ref{tab:libri_light_data}.
 \begin{table}[!t]
-\renewcommand\arraystretch{0.9}
+\renewcommand\arraystretch{0.7}
 \centering
 \caption{Libri-light training data and its subsets.}
-\resizebox{  \linewidth}{!}{%
+\resizebox{ 0.9 \linewidth}{!}{%
 \begin{tabular}{l|c|c|cccc}      
 % \hline      
 \toprule
@@ -373,7 +373,7 @@ Hours  & $5,273$ &$526$& $209$ & $104$ & $52$ & $13$ \\
 \end{table}
 
 % {\color{blue}
-The Dutch and Mandarin corpora used for training the two OOD ASR systems are the Corpus Spoken Dutch (CGN) \cite{oostdijk2000spoken} and Aidatatang\_200zh \cite{aidatatang}, respectively. 
+The Dutch and Mandarin corpora used for training the two OOD ASR systems are the CGN \cite{oostdijk2000spoken} and Aidatatang\_200zh \cite{aidatatang}, respectively. 
 % CGN is a  speech corpus covering various speaking styles including conversations, read speech, and broadcast news (BN).
 % Speech spoken by people in the Netherlands are used. 
 The CGN   training and test data partition follows \cite{laurensw75cgn_kaldi}. Its training data contains $483$ hours of speech, covering speaking styles including conversational and read speech and broadcast news.
@@ -384,21 +384,9 @@ Its training data contains $140$ hours of speech.
 %In order to better compare our approach with previous research in this area, we also tested our approach on the Zerospeech
 
 Evaluation data are taken from  Libri-light and ZeroSpeech 2017 \cite{dunbar2017zero}. 
- Libri-light evaluation sets consist of \textit{dev-clean, dev-other, test-clean} and \textit{test-other}, 
-% They are identical to the sets in Librispeech
-% % , a widely used  corpus for ASR 
-% \cite{panayotov2015librispeech}. 
-% {\color{blue}
-with 
-% dev-/test-clean
-$*$-clean 
-having higher recording quality and accents closer to US English than  
-% dev-/test-other
-$*$-other 
-\cite{panayotov2015librispeech}.
-% }
-% {\color{blue}
-They are used to evaluate the effectiveness of  both front-end pretrained features and  BNFs learned by the back-end.
+ Libri-light evaluation sets consist of \textit{dev-clean, dev-other, test-clean} and \textit{test-other}.
+ , with $*$-clean  having higher recording quality and accents closer to US English than   $*$-other
+ \cite{panayotov2015librispeech}. They are used to evaluate the effectiveness of  both front-end pretrained features and  BNFs learned by the back-end.
 % .}
 
 % {\color{blue}
@@ -521,7 +509,7 @@ Two DNN-BNF models are trained, one taking the Dutch cross-lingual phone labels 
 
 The DNN-BNF consists of $7$ feed-forward layers (FFLs). Each layer has $450$ dimensions except a $40$-dimension bottleneck layer, which is located below the top FFL. 
 % second top. 
-The DNN-BNF uses a chain model which is trained based on  the   LF-MMI criterion. 
+The DNN-BNF uses a chain model \cite{povey2016purely} which is trained based on  the   LF-MMI criterion. 
 The inputs to DNN-BNF are the APC  feature with its neighboring ($-3$ to $+3$) frames. 
 % contextual splicing $\{0, \pm 1, \pm 2, \pm 3\}$.
 % Training labels are either Dutch  or Mandarin frame labels. 
@@ -557,7 +545,7 @@ In this subsection, the APC  features and FHVAE features in the front-end ($\bm{
 ABX error rates ($\%$) of the APC     and   FHVAE features with respect to different hours of training data  are shown in Figure \ref{fig:apc_fhvae_mfcc}.
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=1\linewidth]{LaTeX/apc_fhvae_mfcc_no_sub_hori_no_hrs.png}
+    \includegraphics[width=0.95\linewidth]{LaTeX/apc_fhvae_mfcc_no_sub_hori_no_hrs.png}
     \caption{ABX error rates  of APC features, FHVAE features and official MFCC baseline on Libri-light (Avg. over $4$ sets). }
     \label{fig:apc_fhvae_mfcc}
 \end{figure}
@@ -574,10 +562,10 @@ Figure \ref{fig:apc_fhvae_mfcc} (left) indicates that the APC features are more 
 \subsection{Effectiveness of BNF representation}
 \label{subsec:results_bnf_librilight}
 \begin{table}[!t]
-\renewcommand\arraystretch{0.70}
+\renewcommand\arraystretch{0.55}
 \centering
 \caption{ABX error rates of  BNFs, APC and CPC    on Libri-light.  Models are trained with unlab-600. APC   has $5$ layers, as this gives the best performance among different nos. of APC layers.}
-\resizebox{1 \linewidth}{!}{%
+\resizebox{0.96 \linewidth}{!}{%
 \begin{tabular}{l|cc|cccc|c}      
 % \hline      
 \toprule
@@ -633,7 +621,7 @@ Two front-end features, i.e. APC and CPC (in \cite{kahn2019librilight}),  are al
 % The results show that 
 back-end DNN-BNF modeling with cross-lingual phone labels
 % leveraging OOD language resources 
-outperforms front-end  pretrained features for unsupervised subword modeling, similar to what has been observed by \cite{shibata2017composite,feng2019_TASLP}. BNF also performs better than the   CPC feature    \cite{kahn2019librilight}. Note that CPC does not require OOD resources during training while BNF in this study does.
+outperforms front-end  pretrained features for unsupervised subword modeling, similar to what has been observed by \cite{shibata2017composite,feng2019_TASLP}. BNF also performs better than the   CPC feature    \cite{kahn2019librilight}. Note that CPC does not require OOD resources during training while BNF in this study does. 
 
 (3) The performance achieved by adopting Dutch labels in DNN-BNF model training is slightly better than that by adopting Mandarin labels. 
 % ($9.33\%/6.17\%$). 
@@ -646,6 +634,9 @@ results
 % performance
 on their respective in-domain test sets (in Section \ref{subsubsec:oodasr}).
 
+% \textcolor{blue}{
+Table \ref{tab:dnn_bnf} also shows CPC outperforms  APC. We plan to replace the front-end APC  with CPC and study its efficacy in combination with the back-end DNN-BNF model in the future. 
+% }
 % One may attribute the superiority of adopting Dutch labels over Mandarin ones to the larger amount of training data for the Dutch ASR ($483$ hours)  than that for the Mandarin ASR ($140$ hours).  
 % % While the Dutch ASR  is trained with more data ($483$ hours) than the Mandarin ASR ($140$ hours), .
 % In fact, evaluation results on their respective in-domain test sets (Dutch: $8.98\%$ WER; Mandarin: $6.37\%$ CER) indicate that the performance of the two OOD ASR systems do not differ much.
@@ -675,7 +666,7 @@ on their respective in-domain test sets (in Section \ref{subsubsec:oodasr}).
 \subsection{Effect of amount of training data}
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.9\linewidth]{LaTeX/crsling_dnn_bnf_apc_input_vert_no_prefix_adt_apc_across_9.36_hori_no_hrs.png}
+    \includegraphics[width=0.91\linewidth]{LaTeX/crsling_dnn_bnf_apc_input_vert_no_prefix_adt_apc_across_9.36_hori_no_hrs.png}
     \caption{ABX error rates of BNFs w.r.t amount of training data on Libri-light (Avg. over $4$ sets).}
     \label{fig:dnn_bnf_data_amount}
 \end{figure}
@@ -745,7 +736,7 @@ the model that uses APC features and is trained with $209$ hours of data achieve
 % \end{table}
 
 \begin{table}[!t]
-\renewcommand\arraystretch{0.70}
+\renewcommand\arraystretch{0.65}
 \centering
 \caption{ABX error rates of  BNFs  on ZeroSpeech 2017 English evaluation sets. Models are trained with  Libri-light.}
 \resizebox{1 \linewidth}{!}{%
